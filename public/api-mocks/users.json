@@ -1,0 +1,66 @@
+{
+  "status": "success",
+  "data": {
+    "id": "USER-001",
+    "email": "john.doe@example.com",
+    "name": "John Doe",
+    "role": "seller",
+    "organization": {
+      "name": "Green Energy Co.",
+      "type": "private-company",
+      "verified": true,
+      "kycStatus": "approved"
+    },
+    "profile": {
+      "avatar": "/avatars/user-001.jpg",
+      "phone": "+91 98765 43210",
+      "address": {
+        "street": "123 Green Street",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "pincode": "400001",
+        "country": "India"
+      },
+      "bio": "Renewable energy entrepreneur focused on making carbon credits accessible to Indian businesses."
+    },
+    "wallet": {
+      "balance": {
+        "credits": 1250,
+        "inr": 450000
+      },
+      "linkedPaymentMethods": [
+        {
+          "id": "PM-001",
+          "type": "upi",
+          "details": "john@okicici",
+          "default": true
+        },
+        {
+          "id": "PM-002",
+          "type": "bank",
+          "details": "ICICI Bank ***4567",
+          "default": false
+        }
+      ]
+    },
+    "stats": {
+      "projectsSubmitted": 5,
+      "creditsGenerated": 2340,
+      "creditsRetired": 120,
+      "totalEarnings": 1890000,
+      "verificationRate": 100
+    },
+    "preferences": {
+      "language": "en",
+      "notifications": {
+        "email": true,
+        "sms": false,
+        "push": true
+      },
+      "theme": "light"
+    },
+    "onboardingComplete": true,
+    "createdAt": "2023-06-15T00:00:00Z",
+    "lastLoginAt": "2024-01-20T08:30:00Z"
+  }
+}

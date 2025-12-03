@@ -1,0 +1,190 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "id": "AUD-001",
+      "projectId": "PRJ-001",
+      "projectName": "Rooftop Solar Installation - Mumbai",
+      "auditor": {
+        "id": "AUDITOR-001",
+        "name": "Dr. Priya Sharma",
+        "organization": "Gold Standard India",
+        "certification": "Lead MRV Auditor",
+        "verified": true
+      },
+      "status": "approved",
+      "submittedAt": "2024-01-05T00:00:00Z",
+      "reviewStartedAt": "2024-01-06T00:00:00Z",
+      "completedAt": "2024-01-15T00:00:00Z",
+      "mrvChecklist": {
+        "monitoring": {
+          "status": "pass",
+          "items": [
+            {
+              "id": "M1",
+              "requirement": "Energy generation meter installed and calibrated",
+              "status": "pass",
+              "evidence": "/docs/PRJ-001-meter-calibration.pdf",
+              "notes": "Meters installed and certified by NABL-accredited lab"
+            },
+            {
+              "id": "M2",
+              "requirement": "Monthly monitoring data collected",
+              "status": "pass",
+              "evidence": "/docs/PRJ-001-monthly-data.xlsx",
+              "notes": "Complete data available for all 12 months"
+            }
+          ]
+        },
+        "reporting": {
+          "status": "pass",
+          "items": [
+            {
+              "id": "R1",
+              "requirement": "Baseline emissions calculated using approved methodology",
+              "status": "pass",
+              "evidence": "/docs/PRJ-001-baseline.pdf",
+              "notes": "CDM methodology ACM0002 applied correctly"
+            },
+            {
+              "id": "R2",
+              "requirement": "Project emissions quantified",
+              "status": "pass",
+              "evidence": "/docs/PRJ-001-emissions.pdf",
+              "notes": "All emission sources accounted for"
+            }
+          ]
+        },
+        "verification": {
+          "status": "pass",
+          "items": [
+            {
+              "id": "V1",
+              "requirement": "Third-party verification completed",
+              "status": "pass",
+              "evidence": "/docs/PRJ-001-verification-report.pdf",
+              "notes": "Verified by Gold Standard"
+            },
+            {
+              "id": "V2",
+              "requirement": "Carbon credits issued to registry",
+              "status": "pass",
+              "evidence": "/docs/PRJ-001-registry.pdf",
+              "notes": "450 credits issued and serialized"
+            }
+          ]
+        }
+      },
+      "comments": [
+        {
+          "id": "CMT-001",
+          "author": "Dr. Priya Sharma",
+          "role": "auditor",
+          "message": "Initial review completed. Minor clarifications needed on baseline calculations.",
+          "timestamp": "2024-01-08T10:30:00Z",
+          "resolved": true
+        },
+        {
+          "id": "CMT-002",
+          "author": "Green Energy Co.",
+          "role": "seller",
+          "message": "Updated baseline document with requested clarifications uploaded.",
+          "timestamp": "2024-01-10T14:15:00Z",
+          "resolved": true
+        },
+        {
+          "id": "CMT-003",
+          "author": "Dr. Priya Sharma",
+          "role": "auditor",
+          "message": "All requirements satisfied. Recommending approval.",
+          "timestamp": "2024-01-14T16:45:00Z",
+          "resolved": true
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-001",
+          "name": "Final Audit Report",
+          "type": "audit-report",
+          "url": "/docs/AUD-001-final-report.pdf",
+          "uploadedAt": "2024-01-15T00:00:00Z"
+        },
+        {
+          "id": "DOC-002",
+          "name": "Verification Certificate",
+          "type": "certificate",
+          "url": "/certificates/PRJ-001.pdf",
+          "uploadedAt": "2024-01-15T00:00:00Z"
+        }
+      ],
+      "creditsApproved": 450,
+      "auditFee": 25000,
+      "currency": "INR"
+    },
+    {
+      "id": "AUD-002",
+      "projectId": "PRJ-004",
+      "projectName": "Waste-to-Energy Plant - Bangalore",
+      "auditor": {
+        "id": "AUDITOR-002",
+        "name": "Rajesh Kumar",
+        "organization": "Climate Action Reserve",
+        "certification": "Senior Verifier",
+        "verified": true
+      },
+      "status": "in-review",
+      "submittedAt": "2024-01-12T00:00:00Z",
+      "reviewStartedAt": "2024-01-13T00:00:00Z",
+      "mrvChecklist": {
+        "monitoring": {
+          "status": "pending",
+          "items": [
+            {
+              "id": "M1",
+              "requirement": "Waste input measurements documented",
+              "status": "pending",
+              "evidence": null,
+              "notes": "Awaiting final monthly report"
+            }
+          ]
+        },
+        "reporting": {
+          "status": "in-progress",
+          "items": []
+        },
+        "verification": {
+          "status": "not-started",
+          "items": []
+        }
+      },
+      "comments": [
+        {
+          "id": "CMT-004",
+          "author": "Rajesh Kumar",
+          "role": "auditor",
+          "message": "Please provide the December waste input measurements to complete monitoring review.",
+          "timestamp": "2024-01-18T11:20:00Z",
+          "resolved": false
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-003",
+          "name": "Project Design Document",
+          "type": "pdd",
+          "url": "/docs/PRJ-004-pdd.pdf",
+          "uploadedAt": "2024-01-12T00:00:00Z"
+        }
+      ],
+      "creditsApproved": 0,
+      "auditFee": 28000,
+      "currency": "INR"
+    }
+  ],
+  "meta": {
+    "total": 2,
+    "page": 1,
+    "perPage": 10,
+    "totalPages": 1
+  }
+}

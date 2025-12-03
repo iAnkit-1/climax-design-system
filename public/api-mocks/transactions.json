@@ -1,0 +1,114 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "id": "TXN-001",
+      "type": "buy",
+      "userId": "USER-002",
+      "projectId": "PRJ-001",
+      "projectName": "Rooftop Solar Installation - Mumbai",
+      "quantity": 50,
+      "pricePerCredit": 850,
+      "totalAmount": 42500,
+      "currency": "INR",
+      "status": "completed",
+      "paymentMethod": "upi",
+      "paymentReference": "UPI/123456789/HDFC",
+      "createdAt": "2024-01-18T10:30:00Z",
+      "completedAt": "2024-01-18T10:31:15Z"
+    },
+    {
+      "id": "TXN-002",
+      "type": "retire",
+      "userId": "USER-002",
+      "projectId": "PRJ-003",
+      "projectName": "Afforestation Project - Uttarakhand",
+      "quantity": 25,
+      "totalAmount": 0,
+      "status": "completed",
+      "retirementDetails": {
+        "reason": "Corporate CSR Initiative 2024",
+        "beneficiary": "TechCorp India Private Limited",
+        "certificateUrl": "/certificates/retirement-TXN-002.pdf"
+      },
+      "createdAt": "2024-01-17T14:20:00Z",
+      "completedAt": "2024-01-17T14:20:45Z"
+    },
+    {
+      "id": "TXN-003",
+      "type": "sell",
+      "userId": "USER-001",
+      "projectId": "PRJ-001",
+      "projectName": "Rooftop Solar Installation - Mumbai",
+      "quantity": 100,
+      "pricePerCredit": 850,
+      "totalAmount": 85000,
+      "currency": "INR",
+      "status": "completed",
+      "buyerId": "USER-005",
+      "platformFee": 4250,
+      "netAmount": 80750,
+      "createdAt": "2024-01-16T09:15:00Z",
+      "completedAt": "2024-01-16T09:16:30Z"
+    },
+    {
+      "id": "TXN-004",
+      "type": "topup",
+      "userId": "USER-002",
+      "quantity": 0,
+      "totalAmount": 100000,
+      "currency": "INR",
+      "status": "completed",
+      "paymentMethod": "razorpay",
+      "paymentReference": "pay_XYZ789456",
+      "createdAt": "2024-01-15T16:45:00Z",
+      "completedAt": "2024-01-15T16:46:12Z"
+    },
+    {
+      "id": "TXN-005",
+      "type": "withdraw",
+      "userId": "USER-001",
+      "quantity": 0,
+      "totalAmount": 150000,
+      "currency": "INR",
+      "status": "pending",
+      "paymentMethod": "bank",
+      "bankDetails": {
+        "accountNumber": "****4567",
+        "ifsc": "ICIC0001234",
+        "accountHolder": "Green Energy Co."
+      },
+      "createdAt": "2024-01-19T11:00:00Z",
+      "estimatedCompletionDate": "2024-01-22T00:00:00Z"
+    },
+    {
+      "id": "TXN-006",
+      "type": "buy",
+      "userId": "USER-003",
+      "projectId": "PRJ-002",
+      "projectName": "Biogas Plant - Rural Tamil Nadu",
+      "quantity": 75,
+      "pricePerCredit": 780,
+      "totalAmount": 58500,
+      "currency": "INR",
+      "status": "failed",
+      "paymentMethod": "upi",
+      "failureReason": "Payment declined by bank",
+      "createdAt": "2024-01-14T13:20:00Z",
+      "failedAt": "2024-01-14T13:22:00Z"
+    }
+  ],
+  "meta": {
+    "total": 6,
+    "page": 1,
+    "perPage": 20,
+    "totalPages": 1,
+    "summary": {
+      "totalBought": 125,
+      "totalSold": 100,
+      "totalRetired": 25,
+      "totalSpent": 142500,
+      "totalEarned": 80750
+    }
+  }
+}

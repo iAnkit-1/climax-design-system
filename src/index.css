@@ -1,0 +1,186 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* ClimaX Design System - Green FinTech Colors */
+    /* Primary: Deep Teal - Trust & Sustainability */
+    --primary: 170 77% 24%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 170 60% 35%;
+    --primary-dark: 170 80% 18%;
+    
+    /* Accent: Lime - Growth & Energy */
+    --accent: 78 55% 61%;
+    --accent-foreground: 218 41% 10%;
+    --accent-light: 78 55% 75%;
+    --accent-dark: 78 55% 45%;
+    
+    /* Neutrals */
+    --background: 210 25% 96%;
+    --foreground: 218 41% 10%;
+    --neutral-dark: 218 41% 10%;
+    --neutral-medium: 215 15% 45%;
+    --neutral-light: 210 20% 85%;
+    
+    /* Surface Colors */
+    --card: 0 0% 100%;
+    --card-foreground: 218 41% 10%;
+    
+    /* Secondary */
+    --secondary: 170 25% 90%;
+    --secondary-foreground: 170 77% 24%;
+    
+    /* Muted */
+    --muted: 210 20% 92%;
+    --muted-foreground: 215 15% 45%;
+    
+    /* Status Colors */
+    --success: 145 65% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 45 93% 55%;
+    --warning-foreground: 218 41% 10%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --info: 210 85% 55%;
+    --info-foreground: 0 0% 100%;
+    
+    /* Form Elements */
+    --border: 210 20% 85%;
+    --input: 0 0% 100%;
+    --input-border: 210 20% 85%;
+    --ring: 170 77% 24%;
+    
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 218 41% 10%;
+    
+    /* Spacing Scale - 4/8/12/16/24/32/48 */
+    --spacing-1: 0.25rem; /* 4px */
+    --spacing-2: 0.5rem;  /* 8px */
+    --spacing-3: 0.75rem; /* 12px */
+    --spacing-4: 1rem;    /* 16px */
+    --spacing-6: 1.5rem;  /* 24px */
+    --spacing-8: 2rem;    /* 32px */
+    --spacing-12: 3rem;   /* 48px */
+    
+    /* Border Radius */
+    --radius: 0.75rem; /* 12px */
+    --radius-sm: 0.5rem; /* 8px */
+    --radius-lg: 1rem; /* 16px */
+    
+    /* Elevation Shadows - Soft */
+    --shadow-sm: 0 1px 2px 0 rgba(15, 23, 36, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(15, 23, 36, 0.08), 0 2px 4px -1px rgba(15, 23, 36, 0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(15, 23, 36, 0.1), 0 4px 6px -2px rgba(15, 23, 36, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(15, 23, 36, 0.1), 0 10px 10px -5px rgba(15, 23, 36, 0.04);
+    
+    /* Focus Outline */
+    --focus-ring: 0 0 0 3px hsla(170, 77%, 24%, 0.2);
+    
+    /* Transitions */
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    /* Dark mode adjustments for ClimaX */
+    --background: 218 41% 10%;
+    --foreground: 210 25% 96%;
+    --neutral-dark: 210 25% 96%;
+    
+    --card: 218 35% 14%;
+    --card-foreground: 210 25% 96%;
+    
+    --primary: 170 60% 35%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 170 25% 20%;
+    --secondary-foreground: 170 60% 75%;
+    
+    --muted: 215 20% 20%;
+    --muted-foreground: 215 15% 65%;
+    
+    --accent: 78 55% 61%;
+    --accent-foreground: 218 41% 10%;
+    
+    --border: 215 20% 25%;
+    --input: 218 35% 16%;
+    --input-border: 215 20% 25%;
+    --ring: 170 60% 45%;
+    
+    --popover: 218 35% 14%;
+    --popover-foreground: 210 25% 96%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h1 {
+    @apply text-5xl leading-tight;
+  }
+
+  h2 {
+    @apply text-4xl leading-tight;
+  }
+
+  h3 {
+    @apply text-3xl leading-snug;
+  }
+
+  h4 {
+    @apply text-2xl leading-snug;
+  }
+
+  h5 {
+    @apply text-xl leading-normal;
+  }
+
+  h6 {
+    @apply text-lg leading-normal;
+  }
+}
+
+@layer utilities {
+  /* Spacing utilities using design system scale */
+  .space-climax-1 { @apply space-y-1; }
+  .space-climax-2 { @apply space-y-2; }
+  .space-climax-3 { @apply space-y-3; }
+  .space-climax-4 { @apply space-y-4; }
+  .space-climax-6 { @apply space-y-6; }
+  .space-climax-8 { @apply space-y-8; }
+  .space-climax-12 { @apply space-y-12; }
+  
+  /* Shadow utilities */
+  .shadow-climax-sm { box-shadow: var(--shadow-sm); }
+  .shadow-climax-md { box-shadow: var(--shadow-md); }
+  .shadow-climax-lg { box-shadow: var(--shadow-lg); }
+  .shadow-climax-xl { box-shadow: var(--shadow-xl); }
+  
+  /* Focus ring utility */
+  .focus-climax {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  }
+  
+  /* Smooth transitions */
+  .transition-climax {
+    transition: var(--transition-smooth);
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "id": "PRJ-001",
+      "title": "Rooftop Solar Installation - Mumbai",
+      "description": "Large-scale rooftop solar installation across commercial buildings in Mumbai's business district, generating clean energy and reducing grid dependency.",
+      "seller": {
+        "id": "SELL-001",
+        "name": "Green Energy Co.",
+        "verified": true,
+        "rating": 4.8
+      },
+      "type": "Rooftop Solar",
+      "location": {
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "coordinates": {
+          "lat": 19.0760,
+          "lng": 72.8777
+        }
+      },
+      "credits": {
+        "total": 450,
+        "available": 450,
+        "retired": 0,
+        "unit": "tCO₂e"
+      },
+      "pricing": {
+        "pricePerCredit": 850,
+        "currency": "INR",
+        "minimumPurchase": 10
+      },
+      "vintage": 2024,
+      "verification": {
+        "verifier": "Gold Standard",
+        "verificationDate": "2024-01-15",
+        "certificateUrl": "/certificates/PRJ-001.pdf",
+        "status": "verified"
+      },
+      "impact": {
+        "co2Avoided": 450,
+        "equivalentTrees": 22500,
+        "energyGenerated": 675000,
+        "householdsPowered": 450
+      },
+      "documents": [
+        {
+          "type": "project-plan",
+          "name": "Project Design Document",
+          "url": "/docs/PRJ-001-pdd.pdf"
+        },
+        {
+          "type": "monitoring-report",
+          "name": "2024 Monitoring Report",
+          "url": "/docs/PRJ-001-monitoring-2024.pdf"
+        }
+      ],
+      "images": [
+        "/images/projects/PRJ-001-hero.jpg",
+        "/images/projects/PRJ-001-installation.jpg"
+      ],
+      "createdAt": "2024-01-10T00:00:00Z",
+      "updatedAt": "2024-01-15T00:00:00Z"
+    },
+    {
+      "id": "PRJ-002",
+      "title": "Biogas Plant - Rural Tamil Nadu",
+      "description": "Community biogas facility converting agricultural waste into clean energy while supporting rural livelihoods and reducing methane emissions.",
+      "seller": {
+        "id": "SELL-002",
+        "name": "EcoFarm Solutions",
+        "verified": true,
+        "rating": 4.6
+      },
+      "type": "Biogas",
+      "location": {
+        "city": "Coimbatore",
+        "state": "Tamil Nadu",
+        "coordinates": {
+          "lat": 11.0168,
+          "lng": 76.9558
+        }
+      },
+      "credits": {
+        "total": 320,
+        "available": 320,
+        "retired": 0,
+        "unit": "tCO₂e"
+      },
+      "pricing": {
+        "pricePerCredit": 780,
+        "currency": "INR",
+        "minimumPurchase": 10
+      },
+      "vintage": 2023,
+      "verification": {
+        "verifier": "Verra",
+        "verificationDate": "2023-11-20",
+        "certificateUrl": "/certificates/PRJ-002.pdf",
+        "status": "verified"
+      },
+      "impact": {
+        "co2Avoided": 320,
+        "equivalentTrees": 16000,
+        "wasteProcessed": 12000,
+        "farmersSupported": 85
+      },
+      "documents": [
+        {
+          "type": "project-plan",
+          "name": "Biogas Facility Plan",
+          "url": "/docs/PRJ-002-pdd.pdf"
+        }
+      ],
+      "images": [
+        "/images/projects/PRJ-002-hero.jpg"
+      ],
+      "createdAt": "2023-09-05T00:00:00Z",
+      "updatedAt": "2023-11-20T00:00:00Z"
+    },
+    {
+      "id": "PRJ-003",
+      "title": "Afforestation Project - Uttarakhand",
+      "description": "Reforestation initiative planting native species across degraded forest land, restoring biodiversity and sequestering significant carbon.",
+      "seller": {
+        "id": "SELL-003",
+        "name": "Forest Revival NGO",
+        "verified": true,
+        "rating": 4.9
+      },
+      "type": "Afforestation",
+      "location": {
+        "city": "Dehradun",
+        "state": "Uttarakhand",
+        "coordinates": {
+          "lat": 30.3165,
+          "lng": 78.0322
+        }
+      },
+      "credits": {
+        "total": 1200,
+        "available": 980,
+        "retired": 220,
+        "unit": "tCO₂e"
+      },
+      "pricing": {
+        "pricePerCredit": 920,
+        "currency": "INR",
+        "minimumPurchase": 5
+      },
+      "vintage": 2022,
+      "verification": {
+        "verifier": "Gold Standard",
+        "verificationDate": "2022-12-10",
+        "certificateUrl": "/certificates/PRJ-003.pdf",
+        "status": "verified"
+      },
+      "impact": {
+        "co2Avoided": 1200,
+        "equivalentTrees": 60000,
+        "areaReforested": 150,
+        "speciesPlanted": 12
+      },
+      "documents": [
+        {
+          "type": "project-plan",
+          "name": "Afforestation Plan",
+          "url": "/docs/PRJ-003-pdd.pdf"
+        },
+        {
+          "type": "monitoring-report",
+          "name": "Annual Growth Report",
+          "url": "/docs/PRJ-003-monitoring.pdf"
+        }
+      ],
+      "images": [
+        "/images/projects/PRJ-003-hero.jpg",
+        "/images/projects/PRJ-003-forest.jpg"
+      ],
+      "createdAt": "2022-08-15T00:00:00Z",
+      "updatedAt": "2023-12-10T00:00:00Z"
+    }
+  ],
+  "meta": {
+    "total": 3,
+    "page": 1,
+    "perPage": 10,
+    "totalPages": 1
+  }
+}
