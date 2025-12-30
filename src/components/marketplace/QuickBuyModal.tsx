@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface QuickBuyModalProps {
@@ -21,6 +21,7 @@ interface QuickBuyModalProps {
   projectTitle: string;
   pricePerCredit: number;
   availableCredits: number;
+  projectImage?: string; // Added projectImage prop
 }
 
 export const QuickBuyModal = ({ 
@@ -28,7 +29,8 @@ export const QuickBuyModal = ({
   onOpenChange, 
   projectTitle, 
   pricePerCredit, 
-  availableCredits 
+  availableCredits,
+  projectImage // Added projectImage
 }: QuickBuyModalProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -71,10 +73,30 @@ export const QuickBuyModal = ({
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Quick Buy Carbon Credits</DialogTitle>
-          <DialogDescription>{projectTitle}</DialogDescription>
+          <DialogDescription>
+            {projectTitle}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
+          {/* Project Image Display */}
+          {projectImage && (
+            <div className="relative h-40 w-full overflow-hidden rounded-lg">
+              <img
+                src={projectImage}
+                alt={projectTitle}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+              <div className="absolute bottom-3 left-3 text-white">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4" />
+                  <span className="text-sm font-medium">Verified Project</span>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Quantity Selector */}
           <div className="space-y-2">
             <Label htmlFor="quantity">Quantity (tCO₂e)</Label>

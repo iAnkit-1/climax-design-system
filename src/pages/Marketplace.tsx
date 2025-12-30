@@ -36,6 +36,7 @@ interface CarbonCredit {
   vintage: number;
   verifier: string;
   status: "verified" | "pending" | "retired";
+  imageUrl: string; // Added image URL field
 }
 
 const Marketplace = () => {
@@ -52,7 +53,7 @@ const Marketplace = () => {
   
   const itemsPerPage = 9;
 
-  // Mock data - expanded
+  // Mock data - expanded with image URLs
   const listings: CarbonCredit[] = [
     {
       id: "MKT-001",
@@ -64,20 +65,10 @@ const Marketplace = () => {
       pricePerCredit: 850,
       vintage: 2024,
       verifier: "Gold Standard",
-      status: "verified"
+      status: "verified",
+      imageUrl: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=800&q=80"
     },
-    {
-      id: "MKT-002",
-      title: "Biogas Plant - Rural Tamil Nadu",
-      seller: "EcoFarm Solutions",
-      type: "Biogas",
-      location: "Tamil Nadu",
-      credits: 320,
-      pricePerCredit: 780,
-      vintage: 2023,
-      verifier: "Verra",
-      status: "verified"
-    },
+    
     {
       id: "MKT-003",
       title: "Afforestation Project - Uttarakhand",
@@ -88,7 +79,8 @@ const Marketplace = () => {
       pricePerCredit: 920,
       vintage: 2022,
       verifier: "Gold Standard",
-      status: "verified"
+      status: "verified",
+      imageUrl: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80"
     },
     {
       id: "MKT-004",
@@ -100,7 +92,8 @@ const Marketplace = () => {
       pricePerCredit: 890,
       vintage: 2024,
       verifier: "Climate Action Reserve",
-      status: "pending"
+      status: "pending",
+      imageUrl: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=800&q=80"
     },
     {
       id: "MKT-005",
@@ -112,7 +105,8 @@ const Marketplace = () => {
       pricePerCredit: 870,
       vintage: 2023,
       verifier: "Verra",
-      status: "verified"
+      status: "verified",
+      imageUrl: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=800&q=80"
     },
     {
       id: "MKT-006",
@@ -124,7 +118,8 @@ const Marketplace = () => {
       pricePerCredit: 840,
       vintage: 2024,
       verifier: "Gold Standard",
-      status: "verified"
+      status: "verified",
+      imageUrl: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80"
     },
     {
       id: "MKT-007",
@@ -136,7 +131,8 @@ const Marketplace = () => {
       pricePerCredit: 900,
       vintage: 2022,
       verifier: "Climate Action Reserve",
-      status: "retired"
+      status: "retired",
+      imageUrl: "https://images.unsplash.com/photo-1498307833015-e7b400441eb8?auto=format&fit=crop&w=800&q=80"
     },
     {
       id: "MKT-008",
@@ -148,7 +144,8 @@ const Marketplace = () => {
       pricePerCredit: 820,
       vintage: 2024,
       verifier: "Verra",
-      status: "verified"
+      status: "verified",
+      imageUrl: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=800&q=80"
     },
     {
       id: "MKT-009",
@@ -160,7 +157,8 @@ const Marketplace = () => {
       pricePerCredit: 860,
       vintage: 2023,
       verifier: "Gold Standard",
-      status: "pending"
+      status: "pending",
+      imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
     },
     {
       id: "MKT-010",
@@ -172,7 +170,74 @@ const Marketplace = () => {
       pricePerCredit: 830,
       vintage: 2024,
       verifier: "Verra",
-      status: "verified"
+      status: "verified",
+      imageUrl: "https://images.unsplash.com/photo-1624397640148-949b1732bb0a?auto=format&fit=crop&w=800&q=80"
+    },
+    // Additional projects to have more variety
+    {
+      id: "MKT-011",
+      title: "Mangrove Restoration - Sundarbans",
+      seller: "Coastal Conservation Trust",
+      type: "Reforestation",
+      location: "West Bengal",
+      credits: 1250,
+      pricePerCredit: 940,
+      vintage: 2023,
+      verifier: "Gold Standard",
+      status: "verified",
+      imageUrl: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      id: "MKT-012",
+      title: "Electric Vehicle Charging Network - Hyderabad",
+      seller: "EV Charge India",
+      type: "Transportation",
+      location: "Telangana",
+      credits: 580,
+      pricePerCredit: 810,
+      vintage: 2024,
+      verifier: "Verra",
+      status: "verified",
+      imageUrl: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      id: "MKT-013",
+      title: "Agricultural Methane Capture - Punjab",
+      seller: "AgriGreen Solutions",
+      type: "Agriculture",
+      location: "Punjab",
+      credits: 690,
+      pricePerCredit: 790,
+      vintage: 2023,
+      verifier: "Climate Action Reserve",
+      status: "pending",
+      imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      id: "MKT-014",
+      title: "Geothermal Energy Project - Ladakh",
+      seller: "GeoPower India",
+      type: "Geothermal",
+      location: "Ladakh",
+      credits: 420,
+      pricePerCredit: 950,
+      vintage: 2024,
+      verifier: "Gold Standard",
+      status: "verified",
+      imageUrl: "https://images.unsplash.com/photo-1519025006-03b3c8b133cf?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      id: "MKT-015",
+      title: "Urban Forest - Chennai",
+      seller: "Green City Initiative",
+      type: "Urban Forestry",
+      location: "Tamil Nadu",
+      credits: 320,
+      pricePerCredit: 880,
+      vintage: 2024,
+      verifier: "Verra",
+      status: "verified",
+      imageUrl: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&w=800&q=80"
     }
   ];
 
@@ -249,7 +314,7 @@ const Marketplace = () => {
           <div className="mb-6 sm:mb-8">
             <h1 className="text-2xl sm:text-4xl font-bold text-foreground mb-2">Carbon Credit Marketplace</h1>
             <p className="text-sm sm:text-base text-muted-foreground">
-              Browse verified carbon credits from sustainable projects
+              Browse verified carbon credits from sustainable projects across India
             </p>
           </div>
 
@@ -262,7 +327,7 @@ const Marketplace = () => {
                   <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
-                      placeholder="Search projects..."
+                      placeholder="Search projects by title or location..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="pl-10 min-h-[44px]"
@@ -301,6 +366,11 @@ const Marketplace = () => {
                       <SelectItem value="Energy Efficiency">Energy Efficiency</SelectItem>
                       <SelectItem value="Biomass">Biomass</SelectItem>
                       <SelectItem value="Solar Thermal">Solar Thermal</SelectItem>
+                      <SelectItem value="Reforestation">Reforestation</SelectItem>
+                      <SelectItem value="Transportation">Transportation</SelectItem>
+                      <SelectItem value="Agriculture">Agriculture</SelectItem>
+                      <SelectItem value="Geothermal">Geothermal</SelectItem>
+                      <SelectItem value="Urban Forestry">Urban Forestry</SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -378,14 +448,23 @@ const Marketplace = () => {
           {/* Listings Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
             {paginatedListings.map((listing) => (
-              <Card key={listing.id} variant="project" className="overflow-hidden group cursor-pointer">
+              <Card key={listing.id} variant="project" className="overflow-hidden group cursor-pointer h-full flex flex-col">
+                {/* Card Image Section - REPLACED gradient with actual image */}
                 <Link to={`/marketplace/${listing.id}`} className="block">
-                  <div className="h-48 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-accent/30 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <div className="relative">
-                      <div className="w-20 h-20 rounded-full bg-background/80 flex items-center justify-center backdrop-blur-sm">
-                        <CheckCircle2 className="w-10 h-10 text-primary" />
-                      </div>
+                  <div className="h-48 overflow-hidden relative">
+                    <img
+                      src={listing.imageUrl}
+                      alt={listing.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20" />
+                    <div className="absolute top-3 right-3">
+                      {getStatusBadge(listing.status)}
+                    </div>
+                    <div className="absolute bottom-3 left-3">
+                      <Badge variant="secondary" className="bg-black/60 text-white border-0">
+                        {listing.type}
+                      </Badge>
                     </div>
                   </div>
                 </Link>
@@ -397,7 +476,6 @@ const Marketplace = () => {
                         {listing.title}
                       </CardTitle>
                     </Link>
-                    {getStatusBadge(listing.status)}
                   </div>
                   
                   <div className="space-y-1.5 sm:space-y-2">
@@ -412,11 +490,11 @@ const Marketplace = () => {
                   </div>
                 </CardHeader>
                 
-                <CardContent className="pt-0">
+                <CardContent className="pt-0 flex-grow">
                   <div className="space-y-2 sm:space-y-3">
                     <div className="flex items-center justify-between text-xs sm:text-sm">
-                      <span className="text-muted-foreground">Type:</span>
-                      <Badge variant="secondary" className="text-xs">{listing.type}</Badge>
+                      <span className="text-muted-foreground">Seller:</span>
+                      <span className="font-medium text-xs truncate max-w-[60%]">{listing.seller}</span>
                     </div>
                     
                     <div className="flex items-center justify-between text-xs sm:text-sm">
@@ -451,7 +529,7 @@ const Marketplace = () => {
                         </Button>
                         <Link to={`/marketplace/${listing.id}`} className="flex-1">
                           <Button variant="outline" size="sm" className="w-full min-h-[44px]">
-                            Details
+                            View Details
                           </Button>
                         </Link>
                       </div>
@@ -513,6 +591,9 @@ const Marketplace = () => {
           {paginatedListings.length === 0 && (
             <Card>
               <CardContent className="py-12 text-center">
+                <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
+                  <Search className="w-12 h-12 text-muted-foreground" />
+                </div>
                 <p className="text-muted-foreground">No projects found matching your criteria.</p>
                 <Button 
                   variant="outline" 
@@ -544,6 +625,7 @@ const Marketplace = () => {
           projectTitle={selectedProject.title}
           pricePerCredit={selectedProject.pricePerCredit}
           availableCredits={selectedProject.credits}
+          projectImage={selectedProject.imageUrl} // Pass image to modal if needed
         />
       )}
     </div>
