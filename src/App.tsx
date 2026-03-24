@@ -35,6 +35,7 @@ import Blog from "./pages/Blog";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Compliance from "./pages/Compliance";
+import VerifyCCC from "./pages/VerifyCCC";
 import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
