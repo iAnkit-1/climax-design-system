@@ -75,11 +75,18 @@ export const Navbar = () => {
               Marketplace
             </Link>
             <Link
-              to="/help"
+              to="/registries"
               className="block py-2 text-foreground hover:text-primary transition-climax"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Help Center
+              Registries
+            </Link>
+            <Link
+              to="/verify-ccc"
+              className="block py-2 text-foreground hover:text-primary transition-climax"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Verify CCC
             </Link>
             <Link
               to="/pricing"

@@ -84,6 +84,8 @@ const App = () => (
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/compliance" element={<Compliance />} />
+          <Route path="/verify-ccc" element={<VerifyCCC />} />
+          <Route path="/registries" element={<Landing />} />
           <Route path="/design-system" element={<Index />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
