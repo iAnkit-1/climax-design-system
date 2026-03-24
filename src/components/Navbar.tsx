@@ -26,8 +26,11 @@ export const Navbar = () => {
             <Link to="/marketplace" className="text-foreground hover:text-primary transition-climax">
               Marketplace
             </Link>
-            <Link to="/help" className="text-foreground hover:text-primary transition-climax">
-              Help Center
+            <Link to="/registries" className="text-foreground hover:text-primary transition-climax">
+              Registries
+            </Link>
+            <Link to="/verify-ccc" className="text-foreground hover:text-primary transition-climax">
+              Verify CCC
             </Link>
             <Link to="/pricing" className="text-foreground hover:text-primary transition-climax">
               Pricing
