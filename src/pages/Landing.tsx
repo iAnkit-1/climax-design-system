@@ -13,7 +13,7 @@ const Landing = () => {
         <HeroSection />
         <FeatureCards />
         <ProjectShowcase />
-        <RegistriesSection />
+     
       </main>
       <Footer />
     </div>
