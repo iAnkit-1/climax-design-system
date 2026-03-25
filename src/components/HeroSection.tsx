@@ -33,20 +33,7 @@ export const HeroSection = () => {
             </div>
 
             {/* Social Proof */}
-            <div className="pt-8 flex items-center gap-8 border-t border-border/50">
-              <div>
-                <p className="text-2xl font-bold text-primary">500+</p>
-                <p className="text-sm text-muted-foreground">Verified Projects</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-primary">2M+</p>
-                <p className="text-sm text-muted-foreground">Credits Traded</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-primary">10K+</p>
-                <p className="text-sm text-muted-foreground">Active Users</p>
-              </div>
-            </div>
+        
           </div>
 
           {/* Right: Illustration */}
@@ -69,7 +56,7 @@ export const HeroSection = () => {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-foreground">Trusted Platform</p>
-                  <p className="text-xs text-muted-foreground">ISO Certified</p>
+                 
                 </div>
               </div>
             </div>
