@@ -8,6 +8,7 @@ import { BasicInfoForm } from "@/components/signup/BasicInfoForm";
 import { DocumentUploadForm } from "@/components/signup/DocumentUploadForm";
 import { VerificationStatus } from "@/components/signup/VerificationStatus";
 import { toast } from "sonner";
+import api from "@/lib/api";
 
 type FormData = {
   // Step 1
@@ -157,7 +158,7 @@ const GetStarted = () => {
     return true;
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     let isValid = true;
 
     if (currentStep === 1) {
@@ -170,14 +171,39 @@ const GetStarted = () => {
 
     if (isValid) {
       if (currentStep === 3) {
-        // Store user role for dashboard redirection
-        localStorage.setItem("userRole", formData.role);
-        localStorage.setItem("userEmail", formData.email);
-        localStorage.setItem("userName", `${formData.firstName} ${formData.lastName}`);
-        toast.success("Application submitted successfully!");
+        try {
+          const payload = new FormData();
+          payload.append("role", formData.role);
+          payload.append("name", `${formData.firstName} ${formData.lastName}`);
+          payload.append("email", formData.email);
+          payload.append("password", formData.password);
+          payload.append("phone", formData.phone);
+          if (formData.organization) payload.append("organization", formData.organization);
+
+          // Append files if they exist
+          if (formData.idProof) payload.append("document", formData.idProof);
+
+          const { data } = await api.post('/users', payload, {
+            headers: { 'Content-Type': 'multipart/form-data' } // We mapped local upload in api
+          });
+
+          // Store user info and redirect smoothly
+          localStorage.setItem("userRole", formData.role);
+          localStorage.setItem("userEmail", formData.email);
+          localStorage.setItem("userName", `${formData.firstName} ${formData.lastName}`);
+          localStorage.setItem("token", data.token);
+          
+          toast.success("Application submitted successfully!");
+          
+          setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } catch (error: any) {
+          toast.error(error.response?.data?.message || "Registration failed. Try again.");
+        }
+      } else {
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
-      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 

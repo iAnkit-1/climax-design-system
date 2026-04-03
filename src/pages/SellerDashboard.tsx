@@ -20,63 +20,57 @@ import { QuickActions } from "@/components/dashboard/QuickActions";
 import { UserProfileDropdown } from "@/components/dashboard/UserProfileDropdown";
 import InviteAuditorModal from "@/components/seller/InviteAuditorModal";
 import { toast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/api";
 
 const SellerDashboard = () => {
   const userName = localStorage.getItem("userName") || "User";
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
   
+  const { data: projects = [], refetch } = useQuery({
+    queryKey: ['seller-projects'],
+    queryFn: async () => {
+      const response = await api.get('/projects/myprojects');
+      return response.data;
+    }
+  });
+
+  const activeProjectsCount = projects.filter((p: any) => p.status === 'verified').length;
+  const pendingProjectsCount = projects.filter((p: any) => p.status === 'in-review' || p.status === 'pending').length;
+  const totalCredits = projects.filter((p: any) => p.status === 'verified').reduce((acc: number, p: any) => acc + p.credits, 0);
+  
+  // Real timeline mapped
+  const timelineItems = projects.map((p: any) => ({
+    id: p._id,
+    title: p.title,
+    date: new Date(p.createdAt).toLocaleDateString(),
+    status: p.status === 'verified' ? 'completed' : 
+            (p.status === 'rejected' ? 'rejected' : 
+            (p.status === 'flagged' ? 'in-progress' : 'pending')),
+    description: `Currently marked as ${p.status}`
+  }));
+
   const kpis = [
     {
       title: "My Credits",
-      value: "1,840",
+      value: totalCredits.toLocaleString(),
       icon: Award,
-      trend: "+450 this month",
+      trend: "Based on verified projects",
       color: "text-accent"
     },
     {
-      title: "Active Projects",
-      value: "8",
+      title: "Projects",
+      value: projects.length.toString(),
       icon: FileCheck,
-      trend: "2 pending review",
+      trend: `${pendingProjectsCount} pending review`,
       color: "text-primary"
     },
     {
       title: "Earnings",
-      value: "₹27.6L",
+      value: "Coming Soon",
       icon: IndianRupee,
-      trend: "+₹6.75L this month",
+      trend: "Trade tracking via Wallet",
       color: "text-success"
-    }
-  ];
-
-  const timelineItems = [
-    {
-      id: "1",
-      title: "Community Solar Installation - Phase 1",
-      date: "Jan 10, 2025",
-      status: "completed" as const,
-      description: "Project approved and 450 credits issued"
-    },
-    {
-      id: "2",
-      title: "Agricultural Biogas Plant",
-      date: "Jan 8, 2025",
-      status: "in-progress" as const,
-      description: "Currently under auditor review"
-    },
-    {
-      id: "3",
-      title: "Urban Afforestation Initiative",
-      date: "Jan 5, 2025",
-      status: "completed" as const,
-      description: "Verified and 280 credits issued"
-    },
-    {
-      id: "4",
-      title: "Waste-to-Energy Facility",
-      date: "Jan 15, 2025",
-      status: "pending" as const,
-      description: "Awaiting documentation submission"
     }
   ];
 

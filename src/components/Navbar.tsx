@@ -1,10 +1,30 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem("token");
+  const userRole = localStorage.getItem("userRole");
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setMobileMenuOpen(false);
+    navigate("/");
+  };
+
+  const getDashboardLink = () => {
+    switch (userRole) {
+      case "buyer": return "/dashboard/buyer";
+      case "seller": return "/dashboard/seller";
+      case "auditor": return "/auditor-dashboard";
+      case "admin": return "/admin";
+      default: return "/dashboard";
+    }
+  };
 
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
@@ -23,26 +43,42 @@ export const Navbar = () => {
             <Link to="/how-it-works" className="text-foreground hover:text-primary transition-climax">
               How It Works
             </Link>
-            <Link to="/marketplace" className="text-foreground hover:text-primary transition-climax">
-              Marketplace
-            </Link>
-            
+            {token && (
+              <Link to="/marketplace" className="text-foreground hover:text-primary transition-climax">
+                Marketplace
+              </Link>
+            )}
             <Link to="/verify-ccc" className="text-foreground hover:text-primary transition-climax">
               Verify CCC
             </Link>
-            <Link to="/pricing" className="text-foreground hover:text-primary transition-climax">
-              Pricing
-            </Link>
+            {!token && (
+              <Link to="/pricing" className="text-foreground hover:text-primary transition-climax">
+                Pricing
+              </Link>
+            )}
           </div>
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" asChild>
-              <Link to="/dashboard">Login</Link>
-            </Button>
-            <Button variant="primary" asChild>
-              <Link to="/get-started">Get Started</Link>
-            </Button>
+            {!token ? (
+              <>
+                <Button variant="ghost" asChild>
+                  <Link to="/login">Login</Link>
+                </Button>
+                <Button variant="primary" asChild>
+                  <Link to="/get-started">Get Started</Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="outline" asChild>
+                  <Link to={getDashboardLink()}>My Dashboard</Link>
+                </Button>
+                <Button variant="ghost" onClick={handleLogout} className="text-destructive hover:bg-destructive/10 hover:text-destructive">
+                  Logout
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -65,20 +101,15 @@ export const Navbar = () => {
             >
               How It Works
             </Link>
-            <Link
-              to="/marketplace"
-              className="block py-2 text-foreground hover:text-primary transition-climax"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Marketplace
-            </Link>
-            <Link
-              to="/registries"
-              className="block py-2 text-foreground hover:text-primary transition-climax"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Registries
-            </Link>
+            {token && (
+              <Link
+                to="/marketplace"
+                className="block py-2 text-foreground hover:text-primary transition-climax"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Marketplace
+              </Link>
+            )}
             <Link
               to="/verify-ccc"
               className="block py-2 text-foreground hover:text-primary transition-climax"
@@ -86,24 +117,32 @@ export const Navbar = () => {
             >
               Verify CCC
             </Link>
-            <Link
-              to="/pricing"
-              className="block py-2 text-foreground hover:text-primary transition-climax"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Pricing
-            </Link>
             <div className="pt-4 space-y-3 border-t border-border">
-              <Button variant="ghost" className="w-full" asChild>
-                <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
-                  Login
-                </Link>
-              </Button>
-              <Button variant="primary" className="w-full" asChild>
-                <Link to="/get-started" onClick={() => setMobileMenuOpen(false)}>
-                  Get Started
-                </Link>
-              </Button>
+              {!token ? (
+                <>
+                  <Button variant="ghost" className="w-full" asChild>
+                    <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                      Login
+                    </Link>
+                  </Button>
+                  <Button variant="primary" className="w-full" asChild>
+                    <Link to="/get-started" onClick={() => setMobileMenuOpen(false)}>
+                      Get Started
+                    </Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link to={getDashboardLink()} onClick={() => setMobileMenuOpen(false)}>
+                      My Dashboard
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" className="w-full text-destructive" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         )}

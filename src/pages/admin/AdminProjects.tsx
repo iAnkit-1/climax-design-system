@@ -30,6 +30,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/api";
 
 interface Project {
   id: string;
@@ -49,45 +51,21 @@ const AdminProjects = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [icmLinkOpen, setIcmLinkOpen] = useState(false);
 
-  // Mock data
-  const projects: Project[] = [
-    {
-      id: "PRJ-001",
-      title: "Rooftop Solar Installation - Mumbai",
-      seller: "Green Energy Co.",
-      type: "Rooftop Solar",
-      status: "verified",
-      credits: 450,
-      submittedDate: "2024-01-15"
-    },
-    {
-      id: "PRJ-002",
-      title: "Biogas Plant - Rural Tamil Nadu",
-      seller: "EcoFarm Solutions",
-      type: "Biogas",
-      status: "pending",
-      credits: 320,
-      submittedDate: "2024-01-18"
-    },
-    {
-      id: "PRJ-003",
-      title: "Afforestation Project - Uttarakhand",
-      seller: "Forest Revival NGO",
-      type: "Afforestation",
-      status: "verified",
-      credits: 1200,
-      submittedDate: "2024-01-10"
-    },
-    {
-      id: "PRJ-004",
-      title: "Waste-to-Energy Plant - Bangalore",
-      seller: "WasteTech Pvt Ltd",
-      type: "Waste-to-Energy",
-      status: "flagged",
-      credits: 780,
-      submittedDate: "2024-01-20"
+  const { data: projects = [], isLoading } = useQuery({
+    queryKey: ['adminProjects'],
+    queryFn: async () => {
+      const response = await api.get('/projects');
+      return response.data.map((proj: any) => ({
+        id: proj._id,
+        title: proj.title,
+        seller: proj.seller?.name || "Unknown Seller",
+        type: proj.projectType || "Unknown",
+        status: proj.status || "pending",
+        credits: proj.credits || 0,
+        submittedDate: proj.createdAt || new Date().toISOString()
+      })) as Project[];
     }
-  ];
+  });
 
   const filteredProjects = projects.filter(project =>
     project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||

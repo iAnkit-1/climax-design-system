@@ -35,95 +35,54 @@ export interface Project {
   }[];
 }
 
-const MOCK_PROJECTS: Project[] = [
-  {
-    id: "PRJ-001",
-    title: "Community Solar Installation - Phase 1",
-    projectType: "Rooftop Solar",
-    submittedBy: "Green Energy Co.",
-    submittedDate: "2025-01-10",
-    status: "pending",
-    location: "Karnataka, Bangalore Urban",
-    estimatedCredits: 450,
-    documents: [
-      { id: "1", name: "installation-invoice.pdf", type: "application/pdf", url: "#", size: 2500000 },
-      { id: "2", name: "site-photo-1.jpg", type: "image/jpeg", url: "#", size: 1800000 },
-      { id: "3", name: "equipment-certificate.pdf", type: "application/pdf", url: "#", size: 1200000 },
-    ],
-    baseline: {
-      energyUse: "50000",
-      fuelType: "Grid Electricity",
-      emissionFactor: "0.82",
-      additionalityProof: "This solar installation project would not be financially viable without carbon credit incentives..."
-    },
-    comments: []
-  },
-  {
-    id: "PRJ-002",
-    title: "Agricultural Biogas Plant",
-    projectType: "Biogas",
-    submittedBy: "FarmTech Solutions",
-    submittedDate: "2025-01-08",
-    status: "in-review",
-    location: "Punjab, Ludhiana",
-    estimatedCredits: 320,
-    documents: [
-      { id: "4", name: "biogas-setup.jpg", type: "image/jpeg", url: "#", size: 2100000 },
-      { id: "5", name: "mrv-logs.pdf", type: "application/pdf", url: "#", size: 3200000 },
-    ],
-    baseline: {
-      energyUse: "35000",
-      fuelType: "LPG",
-      emissionFactor: "2.98",
-      additionalityProof: "The biogas plant requires significant upfront investment that is only viable with carbon credit revenue..."
-    },
-    comments: [
-      {
-        id: "c1",
-        author: "Auditor - Rajesh Kumar",
-        timestamp: "2025-01-12 10:30",
-        message: "Please provide additional MRV logs for the past 3 months."
-      }
-    ]
-  },
-  {
-    id: "PRJ-003",
-    title: "Urban Afforestation Initiative",
-    projectType: "Afforestation",
-    submittedBy: "EcoCity Foundation",
-    submittedDate: "2025-01-05",
-    status: "approved",
-    location: "Maharashtra, Mumbai",
-    estimatedCredits: 280,
-    documents: [
-      { id: "6", name: "plantation-map.pdf", type: "application/pdf", url: "#", size: 1500000 },
-      { id: "7", name: "tree-count-report.pdf", type: "application/pdf", url: "#", size: 900000 },
-    ],
-    baseline: {
-      energyUse: "N/A",
-      fuelType: "N/A",
-      emissionFactor: "N/A",
-      additionalityProof: "This afforestation project on degraded urban land would not proceed without carbon finance..."
-    },
-    comments: [
-      {
-        id: "c2",
-        author: "Auditor - Priya Sharma",
-        timestamp: "2025-01-11 14:20",
-        message: "All documentation verified. Project approved."
-      }
-    ]
-  }
-];
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/api";
 
 export default function AuditorDashboard() {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(MOCK_PROJECTS[0]);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const userName = localStorage.getItem("userName") || "Auditor";
 
-  const filteredProjects = MOCK_PROJECTS.filter(project => 
+  const { data: projects = [], refetch } = useQuery({
+    queryKey: ['auditor-projects'],
+    queryFn: async () => {
+      const response = await api.get('/projects');
+      return response.data.map((p: any) => ({
+        id: p._id,
+        title: p.title,
+        projectType: p.category || "Unknown",
+        submittedBy: p.seller?.name || "Unknown",
+        submittedDate: p.createdAt,
+        status: p.status,
+        location: p.location?.state + ", " + p.location?.country,
+        estimatedCredits: p.credits,
+        documents: [], // Wait for file system implementation or use empty array
+        baseline: {
+          energyUse: p.baseline?.energyUse || "N/A",
+          fuelType: p.baseline?.fuelType || "N/A",
+          emissionFactor: p.baseline?.emissionFactor || "N/A",
+          additionalityProof: p.baseline?.additionalityProof || "N/A"
+        },
+        comments: p.comments || []
+      }));
+    }
+  });
+
+  // Default to first project if none selected
+  const selectedProject = projects.find((p: any) => p.id === selectedProjectId) || projects[0] || null;
+
+  const filteredProjects = projects.filter((project: any) => 
     statusFilter === "all" || project.status === statusFilter
   );
+
+  const handleStatusChange = async (projectId: string, newStatus: string, feedback?: string) => {
+    try {
+      await api.put(`/projects/${projectId}/status`, { status: newStatus, feedback });
+      refetch(); // Refresh project list after update
+    } catch (error) {
+      console.error("Failed to update status", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-0">
@@ -148,17 +107,14 @@ export default function AuditorDashboard() {
       <div className="md:hidden border-b border-border bg-card">
         <div className="container mx-auto px-4 py-3">
           <Select
-            value={selectedProject?.id}
-            onValueChange={(id) => {
-              const project = MOCK_PROJECTS.find(p => p.id === id);
-              setSelectedProject(project || null);
-            }}
+            value={selectedProjectId || undefined}
+            onValueChange={setSelectedProjectId}
           >
             <SelectTrigger className="min-h-[44px]">
               <SelectValue placeholder="Select a project" />
             </SelectTrigger>
             <SelectContent>
-              {filteredProjects.map((project) => (
+              {filteredProjects.map((project: any) => (
                 <SelectItem key={project.id} value={project.id} className="min-h-[44px]">
                   {project.title} - {project.status}
                 </SelectItem>
@@ -176,7 +132,7 @@ export default function AuditorDashboard() {
             <ProjectList
               projects={filteredProjects}
               selectedProject={selectedProject}
-              onSelectProject={setSelectedProject}
+              onSelectProject={(p) => setSelectedProjectId(p?.id || null)}
               statusFilter={statusFilter}
               onFilterChange={setStatusFilter}
             />
@@ -185,7 +141,7 @@ export default function AuditorDashboard() {
           {/* Right: Review Pane */}
           <main className="flex-1 overflow-auto">
             {selectedProject ? (
-              <ReviewPane project={selectedProject} />
+              <ReviewPane project={selectedProject} onStatusChange={handleStatusChange} />
             ) : (
               <div className="flex items-center justify-center h-full p-8">
                 <p className="text-muted-foreground">Select a project to review</p>

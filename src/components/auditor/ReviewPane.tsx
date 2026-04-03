@@ -35,7 +35,7 @@ export default function ReviewPane({ project, onStatusChange }: Props) {
       title: "Changes Requested",
       description: `Request sent to ${project.submittedBy}. They have ${changes.deadline} days to respond.`,
     });
-    onStatusChange?.(project.id, "changes-requested");
+    onStatusChange?.(project.id, "flagged", changes.description);
   };
 
   return (
@@ -243,6 +243,9 @@ export default function ReviewPane({ project, onStatusChange }: Props) {
           onClose={() => {
             setShowSignatureModal(false);
             setActionType(null);
+          }}
+          onSubmit={() => {
+            onStatusChange?.(project.id, actionType === "approve" ? "verified" : "rejected");
           }}
           projectId={project.id}
           projectTitle={project.title}

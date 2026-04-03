@@ -6,14 +6,16 @@ import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { useToast } from "@/hooks/use-toast";
+import api from "@/lib/api";
 
 const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !password) {
@@ -25,17 +27,23 @@ const Login = () => {
       return;
     }
 
-    // Check if user has a role stored (from previous signup)
-    const userRole = localStorage.getItem("userRole");
-    
-    toast({
-      title: "Login Successful",
-      description: "Welcome back to ClimaX!",
-    });
-    
-    // Redirect based on user role
-    if (userRole) {
-      switch (userRole) {
+    try {
+      setLoading(true);
+      const { data } = await api.post('/users/login', { email, password });
+      
+      // Store data in local storage matching old format plus token
+      localStorage.setItem("userRole", data.role);
+      localStorage.setItem("userName", data.name);
+      localStorage.setItem("userEmail", data.email);
+      localStorage.setItem("token", data.token);
+
+      toast({
+        title: "Login Successful",
+        description: "Welcome back to ClimaX!",
+      });
+
+      // Redirect based on user role
+      switch (data.role) {
         case "buyer":
           navigate("/dashboard/buyer");
           break;
@@ -51,8 +59,14 @@ const Login = () => {
         default:
           navigate("/dashboard");
       }
-    } else {
-      navigate("/dashboard");
+    } catch (error: any) {
+      toast({
+        title: "Login Failed",
+        description: error.response?.data?.message || "Invalid email or password",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -92,8 +106,8 @@ const Login = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full">
-                Sign In
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Signing In..." : "Sign In"}
               </Button>
 
               <div className="text-center text-sm">

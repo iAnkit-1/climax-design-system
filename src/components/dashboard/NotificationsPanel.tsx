@@ -13,40 +13,7 @@ interface Notification {
   read: boolean;
 }
 
-const mockNotifications: Notification[] = [
-  {
-    id: "1",
-    type: "success",
-    title: "Project Approved",
-    message: "Community Solar Installation - Phase 1 has been approved and 450 credits issued",
-    time: "2 hours ago",
-    read: false
-  },
-  {
-    id: "2",
-    type: "info",
-    title: "Audit Scheduled",
-    message: "Your Agricultural Biogas Plant project audit is scheduled for Jan 25, 2025",
-    time: "5 hours ago",
-    read: false
-  },
-  {
-    id: "3",
-    type: "warning",
-    title: "Documentation Required",
-    message: "Additional documentation needed for Waste-to-Energy Facility project",
-    time: "1 day ago",
-    read: true
-  },
-  {
-    id: "4",
-    type: "success",
-    title: "Payment Received",
-    message: "₹6,75,000 credited to your account for 450 carbon credits",
-    time: "2 days ago",
-    read: true
-  },
-];
+const mockNotifications: Notification[] = [];
 
 const notificationConfig = {
   success: { 
@@ -87,7 +54,14 @@ export const NotificationsPanel = () => {
       <CardContent className="px-3 sm:px-6">
         <ScrollArea className="h-[300px] sm:h-[400px] pr-2 sm:pr-4">
           <div className="space-y-2 sm:space-y-3">
-            {mockNotifications.map((notification) => {
+            {mockNotifications.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-center py-10">
+                <Bell className="w-12 h-12 text-muted-foreground/30 mb-3" />
+                <p className="text-muted-foreground">You're all caught up!</p>
+                <p className="text-xs text-muted-foreground/60">No new notifications</p>
+              </div>
+            ) : (
+             mockNotifications.map((notification) => {
               const config = notificationConfig[notification.type];
               const NotificationIcon = config.icon;
               
@@ -121,7 +95,8 @@ export const NotificationsPanel = () => {
                   </div>
                 </div>
               );
-            })}
+            })
+            )}
           </div>
         </ScrollArea>
       </CardContent>

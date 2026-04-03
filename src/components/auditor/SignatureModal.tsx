@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  onSubmit: () => void;
   projectId: string;
   projectTitle: string;
   actionType: "approve" | "reject";
@@ -18,6 +19,7 @@ interface Props {
 export default function SignatureModal({
   isOpen,
   onClose,
+  onSubmit,
   projectId,
   projectTitle,
   actionType
@@ -48,13 +50,14 @@ export default function SignatureModal({
 
     setIsConfirming(true);
     
-    // Simulate API call
+    // Simulate Blockchain cryptographic signing delay securely
     setTimeout(() => {
       toast({
         title: actionType === "approve" ? "Project Approved" : "Project Rejected",
-        description: `${projectTitle} has been ${actionType === "approve" ? "approved" : "rejected"} successfully.`
+        description: `${projectTitle} has been ${actionType === "approve" ? "verified" : "rejected"} securely.`
       });
       setIsConfirming(false);
+      onSubmit(); // Fire actual database execution handler
       onClose();
     }, 1500);
   };

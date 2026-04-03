@@ -28,15 +28,8 @@ import {
 import { Search, UserPlus, Shield, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: "buyer" | "seller" | "auditor" | "admin";
-  status: "active" | "pending" | "suspended";
-  joinedDate: string;
-}
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/api";
 
 const AdminUsers = () => {
   const { toast } = useToast();
@@ -45,49 +38,28 @@ const AdminUsers = () => {
   const [newAdminEmail, setNewAdminEmail] = useState("");
   const [newAdminName, setNewAdminName] = useState("");
 
-  // Mock data
-  const users: User[] = [
-    {
-      id: "USR-001",
-      name: "Rajesh Kumar",
-      email: "rajesh@greenenergy.com",
-      role: "seller",
-      status: "active",
-      joinedDate: "2024-01-10"
-    },
-    {
-      id: "USR-002",
-      name: "Priya Sharma",
-      email: "priya@ecotech.com",
-      role: "buyer",
-      status: "active",
-      joinedDate: "2024-01-12"
-    },
-    {
-      id: "USR-003",
-      name: "Dr. Amit Patel",
-      email: "amit@acva.in",
-      role: "auditor",
-      status: "active",
-      joinedDate: "2024-01-08"
-    },
-    {
-      id: "USR-004",
-      name: "Admin User",
-      email: "admin@climax.com",
-      role: "admin",
-      status: "active",
-      joinedDate: "2024-01-01"
+  const { data: users = [], refetch } = useQuery({
+    queryKey: ['admin-users'],
+    queryFn: async () => {
+      const response = await api.get('/users');
+      return response.data.map((u: any) => ({
+        id: u._id,
+        name: u.name,
+        email: u.email,
+        role: u.role,
+        status: "active", // defaulting active, could be extended
+        joinedDate: u.createdAt
+      }));
     }
-  ];
+  });
 
-  const filteredUsers = users.filter(user =>
+  const filteredUsers = users.filter((user: any) =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleCreateAdmin = () => {
+  const handleCreateAdmin = async () => {
     if (!newAdminEmail || !newAdminName) {
       toast({
         title: "Missing Information",
@@ -97,13 +69,19 @@ const AdminUsers = () => {
       return;
     }
 
-    toast({
-      title: "Admin User Created",
-      description: `${newAdminName} has been granted admin access.`,
-    });
-    setRoleModalOpen(false);
-    setNewAdminEmail("");
-    setNewAdminName("");
+    try {
+      await api.post('/admin/users', { name: newAdminName, email: newAdminEmail });
+      toast({
+        title: "Admin User Created",
+        description: `${newAdminName} has been granted admin access.`,
+      });
+      setRoleModalOpen(false);
+      setNewAdminEmail("");
+      setNewAdminName("");
+      refetch();
+    } catch (error: any) {
+      toast({ title: "Error", description: error.response?.data?.message || "Failed to create admin", variant: "destructive" });
+    }
   };
 
   const getRoleBadge = (role: string) => {

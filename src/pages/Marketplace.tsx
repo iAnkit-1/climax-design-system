@@ -24,6 +24,8 @@ import { Link } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { QuickBuyModal } from "@/components/marketplace/QuickBuyModal";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/api";
 
 interface CarbonCredit {
   id: string;
@@ -53,196 +55,30 @@ const Marketplace = () => {
   
   const itemsPerPage = 9;
 
-  // Mock data - expanded with image URLs
-  const listings: CarbonCredit[] = [
-    {
-      id: "MKT-001",
-      title: "Rooftop Solar Installation - Mumbai",
-      seller: "Green Energy Co.",
-      type: "Rooftop Solar",
-      location: "Mumbai",
-      credits: 450,
-      pricePerCredit: 850,
-      vintage: 2024,
-      verifier: "Gold Standard",
-      status: "verified",
-      imageUrl: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=800&q=80"
-    },
-    
-    {
-      id: "MKT-003",
-      title: "Afforestation Project - Uttarakhand",
-      seller: "Forest Revival NGO",
-      type: "Afforestation",
-      location: "Uttarakhand",
-      credits: 1200,
-      pricePerCredit: 920,
-      vintage: 2022,
-      verifier: "Gold Standard",
-      status: "verified",
-      imageUrl: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "MKT-004",
-      title: "Waste-to-Energy Plant - Bangalore",
-      seller: "WasteTech Pvt Ltd",
-      type: "Waste-to-Energy",
-      location: "Karnataka",
-      credits: 780,
-      pricePerCredit: 890,
-      vintage: 2024,
-      verifier: "Climate Action Reserve",
-      status: "pending",
-      imageUrl: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "MKT-005",
-      title: "Wind Farm Project - Rajasthan",
-      seller: "WindPower India",
-      type: "Wind Energy",
-      location: "Rajasthan",
-      credits: 950,
-      pricePerCredit: 870,
-      vintage: 2023,
-      verifier: "Verra",
-      status: "verified",
-      imageUrl: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "MKT-006",
-      title: "Community Solar - Kerala",
-      seller: "Solar Kerala Initiative",
-      type: "Rooftop Solar",
-      location: "Kerala",
-      credits: 380,
-      pricePerCredit: 840,
-      vintage: 2024,
-      verifier: "Gold Standard",
-      status: "verified",
-      imageUrl: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "MKT-007",
-      title: "Hydroelectric Project - Himachal Pradesh",
-      seller: "HydroGreen Solutions",
-      type: "Hydroelectric",
-      location: "Himachal Pradesh",
-      credits: 650,
-      pricePerCredit: 900,
-      vintage: 2022,
-      verifier: "Climate Action Reserve",
-      status: "retired",
-      imageUrl: "https://images.unsplash.com/photo-1498307833015-e7b400441eb8?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "MKT-008",
-      title: "Energy Efficiency - Delhi NCR",
-      seller: "Efficiency First",
-      type: "Energy Efficiency",
-      location: "Delhi",
-      credits: 420,
-      pricePerCredit: 820,
-      vintage: 2024,
-      verifier: "Verra",
-      status: "verified",
-      imageUrl: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "MKT-009",
-      title: "Biomass Power - Maharashtra",
-      seller: "BioPower Corp",
-      type: "Biomass",
-      location: "Maharashtra",
-      credits: 540,
-      pricePerCredit: 860,
-      vintage: 2023,
-      verifier: "Gold Standard",
-      status: "pending",
-      imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "MKT-010",
-      title: "Solar Thermal - Gujarat",
-      seller: "SunHeat Technologies",
-      type: "Solar Thermal",
-      location: "Gujarat",
-      credits: 390,
-      pricePerCredit: 830,
-      vintage: 2024,
-      verifier: "Verra",
-      status: "verified",
-      imageUrl: "https://images.unsplash.com/photo-1624397640148-949b1732bb0a?auto=format&fit=crop&w=800&q=80"
-    },
-    // Additional projects to have more variety
-    {
-      id: "MKT-011",
-      title: "Mangrove Restoration - Sundarbans",
-      seller: "Coastal Conservation Trust",
-      type: "Reforestation",
-      location: "West Bengal",
-      credits: 1250,
-      pricePerCredit: 940,
-      vintage: 2023,
-      verifier: "Gold Standard",
-      status: "verified",
-      imageUrl: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "MKT-012",
-      title: "Electric Vehicle Charging Network - Hyderabad",
-      seller: "EV Charge India",
-      type: "Transportation",
-      location: "Telangana",
-      credits: 580,
-      pricePerCredit: 810,
-      vintage: 2024,
-      verifier: "Verra",
-      status: "verified",
-      imageUrl: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "MKT-013",
-      title: "Agricultural Methane Capture - Punjab",
-      seller: "AgriGreen Solutions",
-      type: "Agriculture",
-      location: "Punjab",
-      credits: 690,
-      pricePerCredit: 790,
-      vintage: 2023,
-      verifier: "Climate Action Reserve",
-      status: "pending",
-      imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "MKT-014",
-      title: "Geothermal Energy Project - Ladakh",
-      seller: "GeoPower India",
-      type: "Geothermal",
-      location: "Ladakh",
-      credits: 420,
-      pricePerCredit: 950,
-      vintage: 2024,
-      verifier: "Gold Standard",
-      status: "verified",
-      imageUrl: "https://images.unsplash.com/photo-1519025006-03b3c8b133cf?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "MKT-015",
-      title: "Urban Forest - Chennai",
-      seller: "Green City Initiative",
-      type: "Urban Forestry",
-      location: "Tamil Nadu",
-      credits: 320,
-      pricePerCredit: 880,
-      vintage: 2024,
-      verifier: "Verra",
-      status: "verified",
-      imageUrl: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&w=800&q=80"
+  // Mock data replaced with useQuery from API
+  const { data: listings = [], isLoading } = useQuery({
+    queryKey: ['projects'],
+    queryFn: async () => {
+      const response = await api.get('/projects');
+      return response.data.map((proj: any) => ({
+        id: proj._id,
+        title: proj.title,
+        seller: proj.seller?.name || "Unknown Seller",
+        type: proj.projectType || "Unknown",
+        location: proj.location?.state || proj.location?.address || "Unknown",
+        credits: proj.credits || 0,
+        pricePerCredit: proj.pricePerCredit || 0,
+        vintage: proj.vintage || new Date().getFullYear(),
+        verifier: proj.verifier || "N/A",
+        status: proj.status || "pending",
+        imageUrl: proj.imageUrl || "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=800&q=80"
+      })) as CarbonCredit[];
     }
-  ];
+  });
 
   const filteredListings = listings
-    .filter(listing => {
+    .filter((listing: any) => {
+      if (listing.status !== 'verified') return false;
       const matchesSearch = listing.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            listing.location.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesType = projectType === "all" || listing.type === projectType;

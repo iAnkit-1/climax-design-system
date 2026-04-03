@@ -27,6 +27,8 @@ import {
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/api";
 
 interface Transaction {
   id: string;
@@ -46,76 +48,39 @@ const Wallet = () => {
   const [topUpModalOpen, setTopUpModalOpen] = useState(false);
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
   
-  // Wallet state management
-  const [creditBalance, setCreditBalance] = useState(1250);
-  const [inrBalance, setInrBalance] = useState(458000);
-
-  // Mock data
   const userRole = localStorage.getItem("userRole") || "buyer";
   const userName = localStorage.getItem("userName") || "User";
-
-  const transactions: Transaction[] = [
-    {
-      id: "TXN-001",
-      date: "2024-11-18",
-      type: "buy",
-      projectName: "Rooftop Solar - Mumbai",
-      quantity: 100,
-      amount: 85000,
-      status: "completed",
-      blockchainHash: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb3",
-      blockchainNetwork: "Polygon"
-    },
-    {
-      id: "TXN-002",
-      date: "2024-11-15",
-      type: "retire",
-      projectName: "Wind Farm - Rajasthan",
-      quantity: 50,
-      amount: 0,
-      status: "completed",
-      blockchainHash: "0x8b3a7e42b1b2c2d3f4e5f6a7b8c9d0e1f2a3b4c5",
-      blockchainNetwork: "Polygon"
-    },
-    {
-      id: "TXN-003",
-      date: "2024-11-12",
-      type: "sell",
-      projectName: "Biogas Plant - Tamil Nadu",
-      quantity: 200,
-      amount: 156000,
-      status: "completed",
-      blockchainHash: "0x1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d",
-      blockchainNetwork: "Polygon"
-    },
-    {
-      id: "TXN-004",
-      date: "2024-11-10",
-      type: "topup",
-      amount: 100000,
-      status: "completed"
-    },
-    {
-      id: "TXN-005",
-      date: "2024-11-08",
-      type: "buy",
-      projectName: "Afforestation - Uttarakhand",
-      quantity: 300,
-      amount: 276000,
-      status: "completed",
-      blockchainHash: "0x9f8e7d6c5b4a3928170615243f2e1d0c9b8a7f6e",
-      blockchainNetwork: "Polygon"
-    },
-    {
-      id: "TXN-006",
-      date: "2024-11-05",
-      type: "withdraw",
-      amount: 50000,
-      status: "processing"
+  
+  const { data: balances, refetch: refetchBalances } = useQuery({
+    queryKey: ['wallet-balance'],
+    queryFn: async () => {
+      const response = await api.get('/wallet/balance');
+      return response.data;
     }
-  ];
+  });
 
-  // Chart data - last 6 months
+  const creditBalance = balances?.creditBalance || 0;
+  const inrBalance = balances?.inrBalance || 0;
+
+  const { data: transactions = [], refetch: refetchTransactions } = useQuery({
+    queryKey: ['wallet-transactions'],
+    queryFn: async () => {
+      const response = await api.get('/wallet/transactions');
+      return response.data.map((txn: any) => ({
+        id: txn._id,
+        date: txn.createdAt,
+        type: txn.type,
+        projectName: txn.project?.title || "",
+        quantity: txn.credits,
+        amount: txn.amount,
+        status: txn.status,
+        blockchainHash: txn.blockchainHash,
+        blockchainNetwork: txn.blockchainNetwork
+      }));
+    }
+  });
+
+  // Chart data - mock for now, can be derived cleanly from transactions
   const chartData = [
     { month: "Jun", bought: 450, retired: 100 },
     { month: "Jul", bought: 380, retired: 150 },
@@ -125,53 +90,66 @@ const Wallet = () => {
     { month: "Nov", bought: 390, retired: 180 }
   ];
 
-  const handleRetire = (quantity: number, reason: string) => {
-    // Update credit balance
-    setCreditBalance(prev => prev - quantity);
-    
-    // Generate blockchain hash and certificate ID
-    const certificateId = generateCertificateId();
-    const blockchainHash = generateBlockchainHash();
-    
-    // Generate and download the retirement certificate
-    generateRetirementCertificate({
-      certificateId,
-      holderName: userName,
-      organization: localStorage.getItem("userOrganization") || "Your Organization",
-      quantity,
-      reason,
-      retirementDate: new Date(),
-      blockchainHash,
-    });
-    
-    toast({
-      title: "Credits Retired Successfully",
-      description: `${quantity} tCO₂e has been permanently retired. Your certificate is being downloaded.`,
-    });
+  const handleRetire = async (quantity: number, reason: string) => {
+    try {
+      const res = await api.post('/wallet/transaction', { type: 'retire', quantity });
+      
+      refetchBalances();
+      refetchTransactions();
+
+      // Generate and download the retirement certificate
+      generateRetirementCertificate({
+        certificateId: generateCertificateId(),
+        holderName: userName,
+        organization: localStorage.getItem("userOrganization") || "Your Organization",
+        quantity,
+        reason,
+        retirementDate: new Date(),
+        blockchainHash: res.data.blockchainHash || generateBlockchainHash(), // Use backend hash if returned
+      });
+      
+      toast({
+        title: "Credits Retired Successfully",
+        description: `${quantity} tCO₂e has been permanently retired. Your certificate is being downloaded.`,
+      });
+    } catch (error: any) {
+      toast({ title: "Failed", description: error.response?.data?.message || "Error retiring credits", variant: "destructive" });
+    }
   };
 
-  const handleTopUp = (amount: number, method: string) => {
-    // Simulate payment processing
+  const handleTopUp = async (amount: number, method: string) => {
     toast({
       title: "Payment Processing",
       description: `Processing payment via ${method === "upi" ? "UPI" : "Razorpay"}...`,
     });
     
-    // Simulate successful payment after a delay
-    setTimeout(() => {
-      setInrBalance(prev => prev + amount);
-      toast({
-        title: "Top Up Successful",
-        description: `₹${amount.toLocaleString()} has been added to your wallet.`,
-      });
+    setTimeout(async () => {
+      try {
+        await api.post('/wallet/transaction', { type: 'topup', amount });
+        refetchBalances();
+        refetchTransactions();
+        toast({
+          title: "Top Up Successful",
+          description: `₹${amount.toLocaleString()} has been added to your wallet.`,
+        });
+      } catch (error: any) {
+        toast({ title: "Top Up Failed", description: "Payment recorded but wallet update failed", variant: "destructive" });
+      }
     }, 1500);
   };
 
-  const handleWithdraw = (amount: number, accountDetails: any) => {
-    toast({
-      title: "Withdrawal Request Submitted",
-      description: `Your withdrawal request for ₹${amount.toLocaleString()} is being processed.`,
-    });
+  const handleWithdraw = async (amount: number, accountDetails: any) => {
+    try {
+      await api.post('/wallet/transaction', { type: 'withdraw', amount });
+      refetchBalances();
+      refetchTransactions();
+      toast({
+        title: "Withdrawal Request Submitted",
+        description: `Your withdrawal request for ₹${amount.toLocaleString()} is being processed.`,
+      });
+    } catch (error: any) {
+      toast({ title: "Withdrawal Failed", description: error.response?.data?.message || "Failed to process withdrawal", variant: "destructive" });
+    }
   };
 
   const handleDownloadCertificate = (transactionId: string) => {

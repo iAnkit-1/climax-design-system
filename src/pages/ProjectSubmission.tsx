@@ -4,6 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, ArrowRight, Save } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import api from "@/lib/api";
 import ProjectDetailsForm from "@/components/project-submission/ProjectDetailsForm";
 import LocationForm from "@/components/project-submission/LocationForm";
 import BaselineEmissionsForm from "@/components/project-submission/BaselineEmissionsForm";
@@ -162,13 +163,59 @@ export default function ProjectSubmission() {
     });
   };
   
-  const handleSubmit = () => {
-    toast({
-      title: "Project Submitted",
-      description: "Your project has been submitted for verification."
-    });
-    localStorage.removeItem("climax_project_draft");
-    setTimeout(() => navigate("/dashboard"), 2000);
+  const handleSubmit = async () => {
+    try {
+      const payload = new FormData();
+      payload.append("title", formData.title);
+      payload.append("projectType", formData.projectType);
+      
+      const locationJson = JSON.stringify({
+        state: formData.state,
+        district: formData.district,
+        pincode: formData.pincode,
+        address: formData.address
+      });
+      payload.append("location", locationJson);
+      
+      payload.append("energyUse", formData.energyUse);
+      payload.append("fuelType", formData.fuelType);
+      payload.append("emissionFactor", formData.emissionFactor);
+      payload.append("additionalityProof", formData.additionalityProof);
+      
+      payload.append("iotConnected", String(formData.iotConnected));
+      payload.append("iotDeviceId", formData.iotDeviceId);
+      payload.append("selectedAuditor", formData.selectedAuditor);
+      payload.append("credits", String(formData.estimatedCredits));
+      
+      // Append files
+      if (formData.documents && formData.documents.length > 0) {
+        formData.documents.forEach(doc => {
+          payload.append("documents", doc);
+        });
+      }
+
+      await api.post('/projects', payload, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      toast({
+        title: "Project Submitted",
+        description: "Your project has been submitted for verification."
+      });
+      localStorage.removeItem("climax_project_draft");
+      
+      const role = localStorage.getItem("userRole");
+      const redirectPath = role === "seller" ? "/dashboard/seller" : "/dashboard";
+      
+      setTimeout(() => navigate(redirectPath), 2000);
+      
+    } catch (error: any) {
+      toast({
+        title: "Submission Failed",
+        description: error.response?.data?.message || "Something went wrong while submitting.",
+        variant: "destructive"
+      });
+    }
   };
   
   const renderStep = () => {

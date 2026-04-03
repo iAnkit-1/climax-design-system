@@ -35,6 +35,7 @@ export const getDashboardPath = (role: UserRole): string => {
 };
 
 export const logout = (): void => {
+  localStorage.removeItem("token");
   localStorage.removeItem("userRole");
   localStorage.removeItem("userName");
   localStorage.removeItem("userEmail");

@@ -21,29 +21,7 @@ interface VerificationResult {
   retirementDate?: string;
 }
 
-const mockVerify = (hash: string): Promise<VerificationResult | null> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      if (hash.startsWith("0x") && hash.length >= 20) {
-        resolve({
-          valid: true,
-          hash,
-          projectName: "Sundarbans Mangrove Restoration",
-          creditType: "Voluntary Carbon Credit",
-          quantity: 1500,
-          vintage: "2024",
-          registry: "Verra (VCS)",
-          country: "India",
-          status: "Active",
-          issuanceDate: "2024-03-15",
-          retirementDate: undefined,
-        });
-      } else {
-        resolve(null);
-      }
-    }, 1500);
-  });
-};
+import api from "@/lib/api";
 
 const VerifyCCC = () => {
   const [hash, setHash] = useState("");
@@ -54,9 +32,14 @@ const VerifyCCC = () => {
     if (!hash.trim()) return;
     setLoading(true);
     setResult(undefined);
-    const res = await mockVerify(hash.trim());
-    setResult(res);
-    setLoading(false);
+    try {
+      const response = await api.get(`/wallet/verify/${hash.trim()}`);
+      setResult(response.data);
+    } catch (error) {
+      setResult(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

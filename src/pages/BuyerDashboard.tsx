@@ -13,6 +13,8 @@ import {
 import { Link } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { UserProfileDropdown } from "@/components/dashboard/UserProfileDropdown";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/api";
 
 const BuyerDashboard = () => {
   const userName = localStorage.getItem("userName") || "User";
@@ -48,32 +50,20 @@ const BuyerDashboard = () => {
     }
   ];
 
-  const recentPurchases = [
-    {
-      id: "TXN-2401",
-      project: "Community Solar Installation - Phase 1",
-      credits: 250,
-      price: "₹3,75,000",
-      date: "2025-01-15",
-      status: "completed"
-    },
-    {
-      id: "TXN-2398",
-      project: "Agricultural Biogas Plant",
-      credits: 180,
-      price: "₹2,70,000",
-      date: "2025-01-12",
-      status: "completed"
-    },
-    {
-      id: "TXN-2395",
-      project: "Urban Afforestation Initiative",
-      credits: 120,
-      price: "₹1,80,000",
-      date: "2025-01-08",
-      status: "completed"
+  const { data: recentPurchases = [], isLoading } = useQuery({
+    queryKey: ['my-transactions'],
+    queryFn: async () => {
+      const response = await api.get('/transactions/mytransactions');
+      return response.data.map((txn: any) => ({
+        id: txn._id,
+        project: txn.project?.title || "Unknown Project",
+        credits: txn.credits,
+        price: `₹${txn.price.toLocaleString('en-IN')}`,
+        date: new Date(txn.createdAt).toLocaleDateString(),
+        status: txn.status
+      }));
     }
-  ];
+  });
 
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-0">

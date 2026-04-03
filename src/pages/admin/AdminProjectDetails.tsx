@@ -21,214 +21,99 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-// Mock detailed project data
-const PROJECT_DETAILS: Record<string, any> = {
-  "PRJ-001": {
-    id: "PRJ-001",
-    title: "Rooftop Solar Installation - Mumbai",
-    seller: "Green Energy Co.",
-    sellerEmail: "contact@greenenergy.co.in",
-    sellerPhone: "+91 98765 43210",
-    type: "Rooftop Solar",
-    status: "verified",
-    credits: 450,
-    submittedDate: "2024-01-15",
-    verifiedDate: "2024-01-24",
-    location: {
-      address: "Bandra Kurla Complex, Block G",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400051",
-      coordinates: "19.0596° N, 72.8656° E",
-    },
-    baseline: {
-      energyUse: "50000",
-      fuelType: "Grid Electricity",
-      emissionFactor: "0.82",
-      annualGeneration: "75,000 kWh",
-      capacityInstalled: "50 kW",
-      additionalityProof:
-        "This solar installation project would not be financially viable without carbon credit incentives. The project replaces grid electricity which has a high emission factor in Maharashtra.",
-    },
-    documents: [
-      {
-        id: "1",
-        name: "Installation Invoice.pdf",
-        type: "Invoice",
-        size: "2.5 MB",
-        uploadedAt: "2024-01-15",
-      },
-      {
-        id: "2",
-        name: "Site Photos - Before.zip",
-        type: "Photos",
-        size: "15.8 MB",
-        uploadedAt: "2024-01-15",
-      },
-      {
-        id: "3",
-        name: "Site Photos - After.zip",
-        type: "Photos",
-        size: "18.2 MB",
-        uploadedAt: "2024-01-15",
-      },
-      {
-        id: "4",
-        name: "Equipment Certification.pdf",
-        type: "Certificate",
-        size: "1.2 MB",
-        uploadedAt: "2024-01-15",
-      },
-      {
-        id: "5",
-        name: "Grid Connection Approval.pdf",
-        type: "Approval",
-        size: "0.8 MB",
-        uploadedAt: "2024-01-15",
-      },
-      {
-        id: "6",
-        name: "MRV Data Logs.xlsx",
-        type: "Data",
-        size: "3.4 MB",
-        uploadedAt: "2024-01-20",
-      },
-    ],
-    auditor: {
-      name: "ACVA India",
-      verifiedAt: "2024-01-24",
-      signature: "Digitally Signed",
-      report: "Audit Report - PRJ-001.pdf",
-    },
-    mrvChecklist: [
-      { item: "Baseline emissions calculated", status: "verified" },
-      { item: "Project boundary defined", status: "verified" },
-      { item: "Additionality demonstrated", status: "verified" },
-      { item: "Leakage assessment complete", status: "verified" },
-      { item: "Monitoring plan established", status: "verified" },
-      { item: "Data quality procedures in place", status: "verified" },
-    ],
-    auditTrail: [
-      {
-        date: "2024-01-15 09:30",
-        action: "Project Submitted",
-        user: "Green Energy Co.",
-        details: "Initial submission with all required documents",
-      },
-      {
-        date: "2024-01-16 10:15",
-        action: "Assigned to Auditor",
-        user: "System",
-        details: "Automatically assigned to ACVA India",
-      },
-      {
-        date: "2024-01-18 14:20",
-        action: "Document Review Started",
-        user: "ACVA India",
-        details: "Auditor began reviewing baseline emissions data",
-      },
-      {
-        date: "2024-01-22 11:45",
-        action: "Site Verification Completed",
-        user: "ACVA India",
-        details: "Physical site inspection completed successfully",
-      },
-      {
-        date: "2024-01-24 16:00",
-        action: "Project Verified",
-        user: "ACVA India",
-        details: "All verification criteria met. 450 credits approved.",
-      },
-    ],
-    blockchain: {
-      hash: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb3a1b2c3d4e5f6",
-      network: "Polygon",
-      timestamp: "2024-01-24T16:05:00Z",
-    },
-  },
-  "PRJ-002": {
-    id: "PRJ-002",
-    title: "Biogas Plant - Rural Tamil Nadu",
-    seller: "EcoFarm Solutions",
-    sellerEmail: "info@ecofarm.in",
-    sellerPhone: "+91 87654 32109",
-    type: "Biogas",
-    status: "pending",
-    credits: 320,
-    submittedDate: "2024-01-18",
-    verifiedDate: null,
-    location: {
-      address: "Kanchipuram District",
-      city: "Kanchipuram",
-      state: "Tamil Nadu",
-      pincode: "631502",
-      coordinates: "12.8352° N, 79.7036° E",
-    },
-    baseline: {
-      energyUse: "35000",
-      fuelType: "LPG",
-      emissionFactor: "2.98",
-      annualGeneration: "45,000 m³ biogas",
-      capacityInstalled: "100 m³/day",
-      additionalityProof:
-        "The biogas plant requires significant upfront investment that is only viable with carbon credit revenue. Replaces LPG usage in rural households.",
-    },
-    documents: [
-      {
-        id: "1",
-        name: "Biogas Setup Invoice.pdf",
-        type: "Invoice",
-        size: "1.8 MB",
-        uploadedAt: "2024-01-18",
-      },
-      {
-        id: "2",
-        name: "Plant Photos.zip",
-        type: "Photos",
-        size: "12.4 MB",
-        uploadedAt: "2024-01-18",
-      },
-      {
-        id: "3",
-        name: "MRV Logs Q4 2023.pdf",
-        type: "Data",
-        size: "3.2 MB",
-        uploadedAt: "2024-01-18",
-      },
-    ],
-    auditor: null,
-    mrvChecklist: [
-      { item: "Baseline emissions calculated", status: "verified" },
-      { item: "Project boundary defined", status: "verified" },
-      { item: "Additionality demonstrated", status: "pending" },
-      { item: "Leakage assessment complete", status: "pending" },
-      { item: "Monitoring plan established", status: "verified" },
-      { item: "Data quality procedures in place", status: "pending" },
-    ],
-    auditTrail: [
-      {
-        date: "2024-01-18 11:00",
-        action: "Project Submitted",
-        user: "EcoFarm Solutions",
-        details: "Initial submission",
-      },
-      {
-        date: "2024-01-19 09:30",
-        action: "Under Review",
-        user: "Admin",
-        details: "Project queued for auditor assignment",
-      },
-    ],
-    blockchain: null,
-  },
-};
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/api";
 
 const AdminProjectDetails = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("overview");
 
-  const project = PROJECT_DETAILS[projectId || ""] || PROJECT_DETAILS["PRJ-001"];
+  const { data: rawProject, isLoading, error } = useQuery({
+    queryKey: ['project', projectId],
+    queryFn: async () => {
+      const response = await api.get(`/projects/${projectId}`);
+      return response.data;
+    },
+    enabled: !!projectId
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+      </div>
+    );
+  }
+
+  if (error || !rawProject) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8 text-center space-y-4">
+        <XCircle className="w-12 h-12 text-destructive" />
+        <h2 className="text-xl font-bold text-foreground">Project Not Found</h2>
+        <Button variant="outline" asChild>
+          <Link to="/admin/projects">Return to Registry</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  // Safe mappings bridging DB structure to UI layout
+  const project = {
+    id: rawProject._id,
+    title: rawProject.title,
+    seller: rawProject.seller?.name || "Unknown Seller",
+    sellerEmail: rawProject.seller?.email || "N/A",
+    sellerPhone: "N/A", // Not stored in standard DB schema
+    type: rawProject.projectType || "Unknown",
+    status: rawProject.status || "pending",
+    credits: rawProject.credits || 0,
+    submittedDate: rawProject.createdAt,
+    verifiedDate: rawProject.status === 'verified' ? rawProject.updatedAt : null,
+    location: {
+      address: rawProject.location?.address || "N/A",
+      city: rawProject.location?.district || "N/A",
+      state: rawProject.location?.state || "N/A",
+      pincode: rawProject.location?.pincode || "N/A",
+      coordinates: "GPS Mapping Underway",
+    },
+    baseline: {
+      energyUse: rawProject.energyUse || "N/A",
+      fuelType: rawProject.fuelType || "N/A",
+      emissionFactor: rawProject.emissionFactor || "N/A",
+      capacityInstalled: "Under Audit",
+      additionalityProof: rawProject.additionalityProof || "N/A",
+    },
+    documents: (rawProject.documents || []).map((doc: any, i: number) => ({
+      id: i.toString(),
+      name: doc.name || `Document_${i+1}`,
+      type: "Evidence",
+      size: "Remote File",
+      uploadedAt: rawProject.createdAt,
+    })),
+    auditor: rawProject.selectedAuditor ? {
+      name: rawProject.selectedAuditor.name || "Assigned",
+      verifiedAt: rawProject.status === 'verified' ? rawProject.updatedAt : "Pending",
+      report: "Pending Generation",
+    } : null,
+    mrvChecklist: [
+      { item: "Baseline emissions calculated", status: rawProject.energyUse ? "verified" : "pending" },
+      { item: "Additionality demonstrated", status: rawProject.additionalityProof ? "verified" : "pending" },
+    ],
+    auditTrail: [
+      {
+        date: new Date(rawProject.createdAt).toLocaleString(),
+        action: "Project Submitted",
+        user: rawProject.seller?.name,
+        details: "Initial submission recorded to ledger",
+      }
+    ],
+    blockchain: rawProject.status === 'verified' ? {
+      hash: "Tx_0x... (Mocked for Ledger Demo)",
+      network: "Solana Simulation",
+      timestamp: new Date().toISOString(),
+    } : null,
+  };
 
   const getStatusBadge = (status: string) => {
     const variants: Record<string, { variant: "default" | "secondary" | "destructive" | "outline"; icon: any }> = {

@@ -17,6 +17,8 @@ import {
   Clock,
   Award
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/api";
 
 interface Transaction {
   id: string;
@@ -31,64 +33,52 @@ const ProductDetail = () => {
   const { id } = useParams();
   const [buyModalOpen, setBuyModalOpen] = useState(false);
 
-  // Mock data - in real app, fetch based on id
-  const project = {
-    id: id || "MKT-001",
-    title: "Rooftop Solar Installation - Mumbai",
-    seller: "Green Energy Co.",
-    type: "Rooftop Solar",
-    location: "Mumbai, Maharashtra",
-    credits: 450,
-    pricePerCredit: 850,
-    vintage: 2024,
-    verifier: "Gold Standard",
-    status: "verified" as "verified" | "pending" | "retired",
-    description: `This large-scale rooftop solar project in Mumbai represents a significant step forward in urban renewable energy adoption. The installation spans across 15 commercial and residential buildings, generating clean electricity that offsets approximately 450 tCO₂e annually.
-
-The project not only reduces carbon emissions but also provides economic benefits to the local community through reduced electricity costs and job creation during installation and maintenance phases. All installations meet international quality standards and are regularly monitored for performance.`,
-    methodology: "CDM Methodology ACM0002 - Grid-connected electricity generation from renewable sources",
-    projectStart: "January 2023",
-    certificationDate: "March 2024",
-    monitoringPeriod: "2024-2025",
-    additionalBenefits: [
-      "Reduces local air pollution",
-      "Creates green jobs in the community",
-      "Enhances energy security",
-      "Educational opportunities for local schools"
-    ],
-    documents: [
-      { name: "Project Design Document", type: "PDF", size: "2.4 MB" },
-      { name: "Verification Report", type: "PDF", size: "1.8 MB" },
-      { name: "Monitoring Report 2024", type: "PDF", size: "1.2 MB" }
-    ]
-  };
-
-  const transactions: Transaction[] = [
-    {
-      id: "TXN-001",
-      date: "2024-11-15",
-      buyer: "TechCorp India",
-      credits: 50,
-      price: 42500,
-      status: "completed"
+  const { data: project, isLoading } = useQuery({
+    queryKey: ['project', id],
+    queryFn: async () => {
+      const response = await api.get(`/projects/${id}`);
+      const p = response.data;
+      return {
+        id: p._id,
+        title: p.title || "Unknown Title",
+        seller: p.seller?.name || "Unknown Seller",
+        type: p.projectType || "Unknown Type",
+        location: p.location ? `${p.location.address || ''} ${p.location.state || ''}`.trim() : "Mumbai",
+        credits: p.credits || 0,
+        pricePerCredit: p.pricePerCredit || 850,
+        vintage: p.vintage || new Date().getFullYear(),
+        verifier: p.verifier || "Gold Standard",
+        status: p.status || "pending",
+        description: p.description || "This large-scale rooftop solar project represents a significant step forward in renewable energy adoption.",
+        methodology: p.methodology || "CDM Methodology ACM0002",
+        projectStart: p.projectStart || "January 2023",
+        certificationDate: p.certificationDate || "March 2024",
+        monitoringPeriod: p.monitoringPeriod || "2024-2025",
+        additionalBenefits: p.additionalBenefits?.length > 0 ? p.additionalBenefits : [
+          "Reduces local air pollution",
+          "Creates green jobs in the community"
+        ],
+        documents: p.documents?.length > 0 ? p.documents : [
+          { name: "Project Design Document", type: "PDF", size: "2.4 MB" }
+        ]
+      };
     },
-    {
-      id: "TXN-002",
-      date: "2024-11-10",
-      buyer: "GreenBank Ltd",
-      credits: 100,
-      price: 85000,
-      status: "retired"
-    },
-    {
-      id: "TXN-003",
-      date: "2024-11-05",
-      buyer: "EcoStart Pvt",
-      credits: 25,
-      price: 21250,
-      status: "completed"
-    }
-  ];
+    enabled: !!id
+  });
+
+  const transactions: Transaction[] = [];
+
+  if (isLoading || !project) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center">
+          <p className="text-muted-foreground">Loading project details...</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   const getStatusBadge = (status: string) => {
     const variants = {

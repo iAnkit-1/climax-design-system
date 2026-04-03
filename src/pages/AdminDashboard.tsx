@@ -16,39 +16,49 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { UserProfileDropdown } from "@/components/dashboard/UserProfileDropdown";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/api";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const userName = localStorage.getItem("userName") || "Admin";
   
-  // Mock KPI data
+  // Fetch Dynamic KPI data
+  const { data: stats } = useQuery({
+    queryKey: ['adminStats'],
+    queryFn: async () => {
+      const response = await api.get('/admin/stats');
+      return response.data;
+    }
+  });
+
   const kpis = [
     {
       title: "Total Projects",
-      value: "247",
+      value: stats?.activeProjects?.toLocaleString() || "0",
       icon: Package,
-      trend: "+12.5%",
+      trend: stats?.monthlyGrowth || "+0%",
       color: "text-primary"
     },
     {
       title: "Verified Credits Issued",
-      value: "18,542",
+      value: "N/A", // Not aggregated in current stats endpoint natively
       icon: ShieldCheck,
-      trend: "+8.2%",
+      trend: "+0%",
       color: "text-success"
     },
     {
       title: "Marketplace Volume",
-      value: "₹45.2M",
+      value: `₹${(stats?.totalVolume || 0).toLocaleString()}`,
       icon: IndianRupee,
-      trend: "+15.3%",
+      trend: "+0%",
       color: "text-accent"
     },
     {
-      title: "Active Auditors",
-      value: "32",
+      title: "Registered Users",
+      value: stats?.totalUsers?.toLocaleString() || "0",
       icon: UserCog,
-      trend: "+3",
+      trend: "+0",
       color: "text-info"
     }
   ];
