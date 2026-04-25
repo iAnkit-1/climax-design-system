@@ -185,7 +185,13 @@ export default function ProjectSubmission() {
       payload.append("iotConnected", String(formData.iotConnected));
       payload.append("iotDeviceId", formData.iotDeviceId);
       payload.append("selectedAuditor", formData.selectedAuditor);
-      payload.append("credits", String(formData.estimatedCredits));
+      
+      const energyUseVal = parseFloat(formData.energyUse) || 0;
+      const emissionFactorVal = parseFloat(formData.emissionFactor) || 0;
+      const estimatedCredits = Math.round((energyUseVal * emissionFactorVal) / 1000);
+      
+      payload.append("credits", String(estimatedCredits));
+      payload.append("pricePerCredit", "850");
       
       // Append files
       if (formData.documents && formData.documents.length > 0) {

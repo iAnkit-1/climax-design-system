@@ -36,6 +36,7 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Compliance from "./pages/Compliance";
 import VerifyCCC from "./pages/VerifyCCC";
+import Certificate from "./pages/Certificate";
 import ScrollToTop from "./components/ScrollToTop";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 
@@ -80,6 +81,7 @@ const App = () => (
               <Route path="/marketplace/:id" element={<ProductDetail />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="/verify-ccc" element={<VerifyCCC />} />
+              <Route path="/certificate/:id" element={<Certificate />} />
               <Route path="/verification" element={<Verification />} />
             </Route>
 

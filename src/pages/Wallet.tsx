@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -44,6 +45,7 @@ interface Transaction {
 
 const Wallet = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [retireModalOpen, setRetireModalOpen] = useState(false);
   const [topUpModalOpen, setTopUpModalOpen] = useState(false);
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
@@ -123,19 +125,23 @@ const Wallet = () => {
       description: `Processing payment via ${method === "upi" ? "UPI" : "Razorpay"}...`,
     });
     
-    setTimeout(async () => {
-      try {
-        await api.post('/wallet/transaction', { type: 'topup', amount });
-        refetchBalances();
-        refetchTransactions();
-        toast({
-          title: "Top Up Successful",
-          description: `₹${amount.toLocaleString()} has been added to your wallet.`,
-        });
-      } catch (error: any) {
-        toast({ title: "Top Up Failed", description: "Payment recorded but wallet update failed", variant: "destructive" });
-      }
-    }, 1500);
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          await api.post('/wallet/transaction', { type: 'topup', amount });
+          refetchBalances();
+          refetchTransactions();
+          toast({
+            title: "Top Up Successful",
+            description: `₹${amount.toLocaleString()} has been added to your wallet.`,
+          });
+          resolve(true);
+        } catch (error: any) {
+          toast({ title: "Top Up Failed", description: "Payment recorded but wallet update failed", variant: "destructive" });
+          reject(error);
+        }
+      }, 1500);
+    });
   };
 
   const handleWithdraw = async (amount: number, accountDetails: any) => {
@@ -152,11 +158,8 @@ const Wallet = () => {
     }
   };
 
-  const handleDownloadCertificate = (transactionId: string) => {
-    toast({
-      title: "Downloading Certificate",
-      description: "Your retirement certificate PDF is being generated...",
-    });
+  const handleViewCertificate = (transactionId: string) => {
+    navigate(`/certificate/${transactionId}`);
   };
 
   const exportToCSV = () => {
@@ -437,16 +440,28 @@ const Wallet = () => {
                         {txn.blockchainHash && (
                           <div className="flex items-center gap-1.5 mt-1">
                             <CheckCircle2 className="w-3 h-3 text-success" />
-                            <a
-                              href={`https://polygonscan.com/tx/${txn.blockchainHash}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs text-primary hover:underline flex items-center gap-1"
-                            >
-                              <span className="hidden sm:inline">Blockchain Verified</span>
-                              <span className="sm:hidden">{txn.blockchainHash.slice(0, 6)}...{txn.blockchainHash.slice(-4)}</span>
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
+                            {txn.blockchainHash.startsWith('0x') && txn.blockchainHash.length === 66 ? (
+                              <a
+                                href={`https://amoy.polygonscan.com/tx/${txn.blockchainHash}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-primary hover:underline flex items-center gap-1"
+                              >
+                                <span className="hidden sm:inline">Blockchain Verified</span>
+                                <span className="sm:hidden">{txn.blockchainHash.slice(0, 6)}...{txn.blockchainHash.slice(-4)}</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            ) : (
+                              <Link
+                                to={`/verify-ccc?hash=${txn.blockchainHash}`}
+                                className="text-xs text-primary hover:underline flex items-center gap-1"
+                                title="Verify transaction"
+                              >
+                                <span className="hidden sm:inline">Blockchain Simulated</span>
+                                <span className="sm:hidden">{txn.blockchainHash.slice(0, 6)}...{txn.blockchainHash.slice(-4)}</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </Link>
+                            )}
                           </div>
                         )}
                       </div>
@@ -466,11 +481,11 @@ const Wallet = () => {
                           ₹{txn.amount.toLocaleString()}
                         </p>
                       </div>
-                      {txn.type === "retire" && txn.status === "completed" && (
+                      {(txn.type === "retire" || txn.type === "buy") && txn.status === "completed" && (
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleDownloadCertificate(txn.id)}
+                          onClick={() => handleViewCertificate(txn.id)}
                           className="min-h-[44px]"
                         >
                           <FileText className="w-3 h-3 mr-1" />

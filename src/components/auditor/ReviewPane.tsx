@@ -60,31 +60,33 @@ export default function ReviewPane({ project, onStatusChange }: Props) {
             </div>
             
             {/* Action Buttons */}
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                className="text-amber-600 border-amber-600 hover:bg-amber-50"
-                onClick={() => setShowRequestChangesModal(true)}
-              >
-                <MessageSquare className="w-4 h-4 mr-2" />
-                Request Changes
-              </Button>
-              <Button
-                variant="outline"
-                className="text-red-600 border-red-600 hover:bg-red-50"
-                onClick={() => handleAction("reject")}
-              >
-                <XCircle className="w-4 h-4 mr-2" />
-                Reject
-              </Button>
-              <Button
-                className="bg-green-600 hover:bg-green-700"
-                onClick={() => handleAction("approve")}
-              >
-                <CheckCircle2 className="w-4 h-4 mr-2" />
-                Approve
-              </Button>
-            </div>
+            {['pending', 'in-review', 'flagged'].includes(project.status) && (
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="outline"
+                  className="text-amber-600 border-amber-600 hover:bg-amber-50"
+                  onClick={() => setShowRequestChangesModal(true)}
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  Request Changes
+                </Button>
+                <Button
+                  variant="outline"
+                  className="text-red-600 border-red-600 hover:bg-red-50"
+                  onClick={() => handleAction("reject")}
+                >
+                  <XCircle className="w-4 h-4 mr-2" />
+                  Reject
+                </Button>
+                <Button
+                  className="bg-green-600 hover:bg-green-700"
+                  onClick={() => handleAction("approve")}
+                >
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  Approve
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

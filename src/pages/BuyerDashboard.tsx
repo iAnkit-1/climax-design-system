@@ -60,7 +60,8 @@ const BuyerDashboard = () => {
         credits: txn.credits,
         price: `₹${txn.price.toLocaleString('en-IN')}`,
         date: new Date(txn.createdAt).toLocaleDateString(),
-        status: txn.status
+        status: txn.status,
+        blockchainHash: txn.blockchainHash
       }));
     }
   });
@@ -196,8 +197,29 @@ const BuyerDashboard = () => {
                             </Badge>
                           </div>
                           <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
-                            <span>{purchase.id}</span>
+                            <span title="Transaction ID">ID: {purchase.id.substring(0, 8)}...</span>
                             <span>{purchase.date}</span>
+                            {purchase.blockchainHash && (
+                              purchase.blockchainHash.startsWith('0x') && purchase.blockchainHash.length === 66 ? (
+                                <a 
+                                  href={`https://amoy.polygonscan.com/tx/${purchase.blockchainHash}`} 
+                                  target="_blank" 
+                                  rel="noreferrer" 
+                                  className="text-primary hover:underline flex items-center gap-1"
+                                  title="View on Polygonscan"
+                                >
+                                  <span>Polygon TX: {purchase.blockchainHash.substring(0, 10)}...</span>
+                                </a>
+                              ) : (
+                                <Link 
+                                  to={`/verify-ccc?hash=${purchase.blockchainHash}`}
+                                  className="text-primary hover:underline flex items-center gap-1 text-xs" 
+                                  title="Verify simulated transaction locally"
+                                >
+                                  <span>Simulated TX: {purchase.blockchainHash.substring(0, 10)}...</span>
+                                </Link>
+                              )
+                            )}
                           </div>
                         </div>
                         <div className="flex items-center justify-between sm:flex-col sm:text-right gap-2">

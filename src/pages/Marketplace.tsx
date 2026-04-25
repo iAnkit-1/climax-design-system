@@ -461,6 +461,7 @@ const Marketplace = () => {
           projectTitle={selectedProject.title}
           pricePerCredit={selectedProject.pricePerCredit}
           availableCredits={selectedProject.credits}
+          projectId={selectedProject.id}
           projectImage={selectedProject.imageUrl} // Pass image to modal if needed
         />
       )}

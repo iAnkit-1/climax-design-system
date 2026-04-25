@@ -22,15 +22,23 @@ interface TopUpModalProps {
 export const TopUpModal = ({ open, onOpenChange, onTopUp }: TopUpModalProps) => {
   const [amount, setAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("upi");
+  const [isLoading, setIsLoading] = useState(false);
 
   const quickAmounts = [1000, 5000, 10000, 25000, 50000];
 
-  const handleTopUp = () => {
+  const handleTopUp = async () => {
     const amt = parseInt(amount);
     if (amt > 0) {
-      onTopUp(amt, paymentMethod);
-      setAmount("");
-      onOpenChange(false);
+      setIsLoading(true);
+      try {
+        await onTopUp(amt, paymentMethod);
+        setAmount("");
+        onOpenChange(false);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -117,14 +125,14 @@ export const TopUpModal = ({ open, onOpenChange, onTopUp }: TopUpModalProps) => 
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
             Cancel
           </Button>
           <Button 
             onClick={handleTopUp}
-            disabled={!amount || parseInt(amount) < 100}
+            disabled={!amount || parseInt(amount) < 100 || isLoading}
           >
-            Proceed to Payment
+            {isLoading ? "Processing..." : "Proceed to Payment"}
           </Button>
         </DialogFooter>
       </DialogContent>

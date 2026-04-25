@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Minus, Plus, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import api from "@/lib/api";
 
 interface QuickBuyModalProps {
   open: boolean;
@@ -21,6 +22,7 @@ interface QuickBuyModalProps {
   projectTitle: string;
   pricePerCredit: number;
   availableCredits: number;
+  projectId: string; // Added projectId
   projectImage?: string; // Added projectImage prop
 }
 
@@ -30,12 +32,14 @@ export const QuickBuyModal = ({
   projectTitle, 
   pricePerCredit, 
   availableCredits,
+  projectId,
   projectImage // Added projectImage
 }: QuickBuyModalProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [quantity, setQuantity] = useState(10);
   const [paymentMethod, setPaymentMethod] = useState("wallet");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleQuantityChange = (value: number) => {
     const newQuantity = Math.max(1, Math.min(value, availableCredits));
@@ -46,26 +50,42 @@ export const QuickBuyModal = ({
   const platformFee = totalPrice * 0.025;
   const finalTotal = totalPrice + platformFee;
 
-  const handlePurchase = () => {
+  const handlePurchase = async () => {
+    setIsLoading(true);
     toast({
-      title: "Processing Blockchain Transaction",
-      description: `Recording your purchase of ${quantity} tCO₂e on blockchain...`,
+      title: "Processing Payment & Blockchain Transaction",
+      description: `Recording your purchase of ${quantity} tCO₂e on Solana Devnet...`,
     });
     
-    // Simulate blockchain processing
-    setTimeout(() => {
+    try {
+      // Simulate payment animation delay for visual feedback
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const response = await api.post('/transactions', {
+        projectId,
+        creditsToBuy: quantity
+      });
+      
       toast({
         title: "Purchase Successful!",
-        description: `Transaction recorded on blockchain. Redirecting to wallet...`,
+        description: `Transaction recorded on blockchain (Hash: ${response.data.blockchainHash?.substring(0, 10)}...). Redirecting...`,
       });
       
       onOpenChange(false);
       
-      // Redirect to wallet after showing success
       setTimeout(() => {
         navigate("/wallet");
       }, 1500);
-    }, 2000);
+    } catch (error: any) {
+      console.error(error);
+      toast({
+        title: "Purchase Failed",
+        description: error.response?.data?.message || "Something went wrong",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -172,11 +192,11 @@ export const QuickBuyModal = ({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
             Cancel
           </Button>
-          <Button onClick={handlePurchase}>
-            Proceed to Payment
+          <Button onClick={handlePurchase} disabled={isLoading}>
+            {isLoading ? "Processing..." : "Proceed to Payment"}
           </Button>
         </DialogFooter>
       </DialogContent>

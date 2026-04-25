@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, ShieldCheck, ShieldX, Loader2, Hash, Clock, Leaf, MapPin } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
 interface VerificationResult {
   valid: boolean;
@@ -24,7 +25,9 @@ interface VerificationResult {
 import api from "@/lib/api";
 
 const VerifyCCC = () => {
-  const [hash, setHash] = useState("");
+  const [searchParams] = useSearchParams();
+  const urlHash = searchParams.get("hash") || "";
+  const [hash, setHash] = useState(urlHash);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<VerificationResult | null | undefined>(undefined);
 
@@ -41,6 +44,12 @@ const VerifyCCC = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (urlHash) {
+      handleVerify();
+    }
+  }, [urlHash]);
 
   return (
     <div className="min-h-screen flex flex-col">

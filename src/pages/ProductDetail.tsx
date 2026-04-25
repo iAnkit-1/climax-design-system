@@ -39,7 +39,7 @@ const ProductDetail = () => {
       const response = await api.get(`/projects/${id}`);
       const p = response.data;
       return {
-        id: p._id,
+        id: id,
         title: p.title || "Unknown Title",
         seller: p.seller?.name || "Unknown Seller",
         type: p.projectType || "Unknown Type",
@@ -316,6 +316,7 @@ const ProductDetail = () => {
       <QuickBuyModal
         open={buyModalOpen}
         onOpenChange={setBuyModalOpen}
+        projectId={project.id}
         projectTitle={project.title}
         pricePerCredit={project.pricePerCredit}
         availableCredits={project.credits}
