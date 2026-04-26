@@ -29,6 +29,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Verification from "./pages/Verification";
 import About from "./pages/About";
+import MyProjects from "./pages/MyProjects.tsx";
+
 import Contact from "./pages/Contact";
 import Careers from "./pages/Careers";
 import Blog from "./pages/Blog";
@@ -94,6 +96,7 @@ const App = () => (
             <Route element={<ProtectedRoute allowedRoles={['seller']} />}>
               <Route path="/dashboard/seller" element={<SellerDashboard />} />
               <Route path="/project-submission" element={<ProjectSubmission />} />
+              <Route path="/my-projects" element={<MyProjects />} />
             </Route>
 
             {/* Auditor Only Routes */}

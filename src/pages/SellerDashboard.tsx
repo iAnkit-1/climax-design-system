@@ -186,7 +186,7 @@ const SellerDashboard = () => {
               </NavLink>
 
               <NavLink
-                to="/marketplace"
+                to="/my-projects"
                 className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-climax"
                 activeClassName="bg-primary/10 text-primary font-medium"
               >
