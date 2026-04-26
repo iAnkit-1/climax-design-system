@@ -60,6 +60,8 @@ const Marketplace = () => {
     queryKey: ['projects'],
     queryFn: async () => {
       const response = await api.get('/projects');
+      console.log(response.data);
+      
       return response.data.map((proj: any) => ({
         id: proj._id,
         title: proj.title,
@@ -69,7 +71,7 @@ const Marketplace = () => {
         credits: proj.credits || 0,
         pricePerCredit: proj.pricePerCredit || 0,
         vintage: proj.vintage || new Date().getFullYear(),
-        verifier: proj.verifier || "N/A",
+        fuelType: proj.fuelType || "N/A",
         status: proj.status || "pending",
         imageUrl: proj.imageUrl || "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=800&q=80"
       })) as CarbonCredit[];
@@ -334,8 +336,8 @@ const Marketplace = () => {
                     </div>
                     
                     <div className="flex items-center justify-between text-xs sm:text-sm">
-                      <span className="text-muted-foreground">Verifier:</span>
-                      <span className="font-medium text-xs truncate max-w-[60%]">{listing.verifier}</span>
+                      <span className="text-muted-foreground">FuelType:</span>
+                      <span className="font-medium text-xs truncate max-w-[60%]">{listing.fuelType}</span>
                     </div>
                     
                     <div className="flex items-center justify-between text-xs sm:text-sm">
